@@ -32,7 +32,7 @@
 
   
   networking.hostName = "sparrow"; 	# Define your hostname.
-  age.secrets.rpi_pass.file = ../secrets/rpi_pass.age;
+  age.secrets.rpi_pass.file = ../../secrets/rpi_pass.age;
   networking.wireless = {
     enable = true;  			# Enables wireless support via wpa_supplicant.
     userControlled.enable = true; 	# Enables support for wpa_cli and wpa_gui
@@ -115,7 +115,7 @@
   # services.udev.extraRules = ''ACTION=="change", SUBSYSTEM=="drm", RUN+="${pkgs.autorandr}/bin/autorandr -c"''; 
 
 
-  age.secrets.vcvol.file = ../secrets/vcvol.age;
+  age.secrets.vcvol.file = ../../secrets/vcvol.age;
   systemd.services.veradecrypt = {
     description = "Decrypt veracrypt partition";
     wantedBy = [ "multi-user.target" ];
