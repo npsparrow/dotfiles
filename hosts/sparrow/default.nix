@@ -19,8 +19,6 @@
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 
-  # ==============
-
   boot = {
     consoleLogLevel = 0;
     loader = {
@@ -50,6 +48,7 @@
       };
     };
   };
+  services.udev.extraRules = ''ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0bda", ATTR{idProduct}=="8156", ATTR{power/autosuspend}="20"''; 
 
   # Enable the X11 windowing system.
   hardware.opengl.enable = true;
@@ -125,7 +124,7 @@
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = "yes";
-      ExecStart = ''${pkgs.bash}/bin/bash -c "cat '${config.age.secrets.vcvol.path}' | ${pkgs.cryptsetup}/bin/cryptsetup --type=tcrypt --veracrypt open /dev/nvme0n1p2 additional"'';
+      ExecStart = ''${pkgs.bash}/bin/bash -c "cat '${config.age.secrets.vcvol.path}' | ${pkgs.cryptsetup}/bin/cryptsetup --type=tcrypt --veracrypt open /dev/nvme1n1p2 additional"'';
       ExecStop = "${pkgs.cryptsetup}/bin/cryptsetup close /dev/mapper/additional";
     };
   };

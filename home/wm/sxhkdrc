@@ -120,3 +120,19 @@ super + alt + shift + {h,j,k,l}
 # move a floating window
 super + {Left,Down,Up,Right}
 	bspc node -v {-20 0,0 20,0 -20,20 0}
+
+# Screenshot
+super + shift + s
+	maim -s | xclip -selection clipboard -t image/png
+
+Print
+	maim -s | xclip -selection clipboard -t image/png
+
+# Volume Keys
+XF86AudioMute
+	wpctl set-mute @DEFAULT_SINK@ toggle
+XF86AudioLowerVolume
+	wpctl set-volume @DEFAULT_SINK@ 2%-
+XF86AudioRaiseVolume
+	wpctl set-volume @DEFAULT_SINK@ 2%+
+

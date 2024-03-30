@@ -1,7 +1,7 @@
 { pkgs, config, ... }: 
 {
   imports = [
-    ./polybar.nix
+    ./polybar
   ];
 
   # wallpaper, binary, sxhkdrc
