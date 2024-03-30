@@ -137,7 +137,10 @@ in {
     ranger # terminal file manager
     sbctl
     ntfs3g
+    man-pages
+    man-pages-posix
   ];
+  documentation.dev.enable = true;
 
   # Enable sound with pipewire.
   sound.enable = false;               # ALSA
