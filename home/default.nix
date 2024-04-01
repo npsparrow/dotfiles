@@ -4,14 +4,25 @@
   imports = [ 
     ./wm
     ./shell
-    # ./emacs
+    ./emacs
     # ./kitty
     ./programs
     # etc.
   ];
 
-  home.username = "nikhil";
-  home.homeDirectory = "/home/nikhil";
+  home = {
+    username = "nikhil";
+    homeDirectory = "/home/nikhil";
+    sessionVariables = {
+      XDG_CONFIG_HOME = "$HOME/.config";
+      XDG_CACHE_HOME = "$HOME/.cache";
+      XDG_DATA_HOME = "$HOME/.local/share";
+      XDG_STATE_HOME = "$HOME/.local/state";
+
+      STEAM_API_KEY = "7EDE7F4E57DB19E978AD9B05FC00A412";
+      LESSHISTFILE = "-";
+    };
+  };
 
   # This value determines the home Manager release that your
   # configuration is compatible with. This helps avoid breakage

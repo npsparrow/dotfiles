@@ -6,11 +6,12 @@ pgrep -x sxhkd > /dev/null || sxhkd &
 # MONITORS
 autorandr -c
 
-if [ xrandr | awk '/ connected/ {count++} END {print count}' -eq 1 ]; then
-  bspc monitor eDP -d I II III IV V VI VII VIII IX X
-else
+if [ $(autorandr -c | grep detected | cut -f 1 -d ' ') = dual ]
+then
   bspc monitor eDP -d IV VI 
   bspc monitor DisplayPort-1-0 -d I II III V VII VIII IX X 
+else
+  bspc monitor eDP -d I II III IV V VI VII VIII IX X
 fi
 
 
@@ -38,4 +39,4 @@ bspc rule -a Zathura state=tiled
 
 
 # WALLPAPER
-feh --bg-scale /home/nikhil/.config/bspwm/wallpaper.jpg
+feh --bg-scale /home/nikhil/.config/bspwm/walls/mononoke.jpg --no-fehbg

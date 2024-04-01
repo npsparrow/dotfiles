@@ -12,10 +12,6 @@
     ];
 
   
-  # ???
-  environment.variables.STEAM_API_KEY = "7EDE7F4E57DB19E978AD9B05FC00A412";
-
-
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 
@@ -30,20 +26,20 @@
 
   
   networking.hostName = "sparrow"; 	# Define your hostname.
-  age.secrets.rpi_pass.file = ../../secrets/rpi_pass.age;
+  age.secrets.wireless.file = ../../secrets/wireless.age;
+  networking.wireless.environmentFile = "${config.age.secrets.wireless.path}";
   networking.wireless = {
     enable = true;  			# Enables wireless support via wpa_supplicant.
     userControlled.enable = true; 	# Enables support for wpa_cli and wpa_gui
     networks = {
-      # "Andromeda".pskRaw = "2cf19bae44e4982c910947e054825495a8c52220307e75bb9604f0e2db4d8ec7";
-      "peregrine".pskRaw = "1a7de5f5721757ba5a3b8252c96b5fea9eb59705bf5ffc11d0cc5754594055ea";
+      "peregrine".pskRaw = "@PSK_PEREGRINE@";
       "rpi_wpa2" = {
         auth = ''
           key_mgmt=WPA-EAP
           eap=PEAP
           phase2="auth=MSCHAPV2"
-          identity="panicn"
-          password="$(cat "${config.age.secrets.rpi_pass.path}")"
+          identity="@RPI_IDENTITY@"
+          password="@RPI_PASSWORD@"
         '';
       };
     };

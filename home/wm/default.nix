@@ -4,12 +4,21 @@
     ./polybar
   ];
 
-  # wallpaper, binary, sxhkdrc
-  home.file.".config/bspwm/wallpaper.jpg".source = ./walls/mononoke.jpg;
-  home.file.".config/sxhkd/sxhkdrc".source = ./sxhkdrc;
-  home.file.".config/bspwm/bspwmrc" = {
-    source = ./bspwmrc;
-    executable = true;
+
+  home.packages = [
+    pkgs.rofi
+    pkgs.betterlockscreen
+  ];
+
+  # wallpaper, bspwmrc
+  home.file.".config/bspwm" = {
+    source = ./bspwm;
+    recursive = true;
+  };
+  # sxhkdrc
+  home.file.".config/sxhkd" = {
+    source = ./sxhkd;
+    recursive = true;
   };
 
   # Install picom and enable its service
@@ -21,6 +30,18 @@
     ];
   };
 
-  home.packages = [ pkgs.rofi ];
-  home.file.".config/rofi/sparrow.rasi".source = ./sparrow.rasi;
+  # install rofi and configure
+  home.file.".config/rofi" = {
+    source = ./rofi;
+    recursive = true;
+  };
+
+  # betterlockscreen
+  home.file.".config/betterlockscreen" = {
+    source = ./betterlockscreen;
+    recursive = true;
+  };
+
+  # dunst
+  services.dunst.enable = true;
 }

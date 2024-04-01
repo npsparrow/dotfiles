@@ -6,6 +6,6 @@ let
   systems = [ sparrow ];
 in
 {
-  "rpi_pass.age".publicKeys = users ++ systems;
+  "wireless.age".publicKeys = users ++ systems;
   "vcvol.age".publicKeys = users ++ systems;
 }

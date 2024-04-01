@@ -10,9 +10,6 @@ in {
     useDefaultShell = true;
     description = "nikhil";
     extraGroups = [ "wheel" ];
-    # openssh.authorizedKeys.keys = [
-    #   "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJx3Sk20pLL1b2PPKZey2oTyioODrErq83xG78YpFBoj admin@ryan-MBP"
-    # ];
   };
 
   # given the users in this list the right to specify additional substituters via:
@@ -58,18 +55,6 @@ in {
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
-
-  # i18n.extraLocaleSettings = {
-  #   LC_ADDRESS = "zh_CN.UTF-8";
-  #   LC_IDENTIFICATION = "zh_CN.UTF-8";
-  #   LC_MEASUREMENT = "zh_CN.UTF-8";
-  #   LC_MONETARY = "zh_CN.UTF-8";
-  #   LC_NAME = "zh_CN.UTF-8";
-  #   LC_NUMERIC = "zh_CN.UTF-8";
-  #   LC_PAPER = "zh_CN.UTF-8";
-  #   LC_TELEPHONE = "zh_CN.UTF-8";
-  #   LC_TIME = "zh_CN.UTF-8";
-  # };
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
