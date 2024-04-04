@@ -93,23 +93,8 @@ in {
 
   programs.dconf.enable = true;
 
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  networking.firewall.enable = false;
+  networking.firewall.enable = true;
 
-  # Enable the OpenSSH daemon.
-  # services.openssh = {
-  #   enable = true;
-  #   settings = {
-  #     X11Forwarding = true;
-  #     PermitRootLogin = "no"; # disable root login
-  #     PasswordAuthentication = false; # disable password login
-  #   };
-  #   openFirewall = true;
-  # };
-
-  # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
@@ -127,21 +112,16 @@ in {
   ];
   documentation.dev.enable = true;
 
-  # Enable sound with pipewire.
   sound.enable = false;               # ALSA
   hardware.pulseaudio.enable = false; # pulseaudio
 
-  services.power-profiles-daemon = {
-    enable = true;
-  };
+  services.power-profiles-daemon.enable = true;
 
   security.polkit.enable = true;
 
   services = {
     # dbus.packages = [pkgs.gcr];
-
     # geoclue2.enable = true;
-
     pipewire = {
       enable = true;
       alsa.enable = true;

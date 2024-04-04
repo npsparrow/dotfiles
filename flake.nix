@@ -19,8 +19,10 @@
       system = "x86_64-linux";
       modules = [
 
+        # SPARROW
         ./hosts/sparrow
 
+        # HOME MANAGER
         home-manager.nixosModules.home-manager
         {
           home-manager.useGlobalPkgs = true;
@@ -29,6 +31,7 @@
           # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
         }
 
+        # LANZABOOTE
         lanzaboote.nixosModules.lanzaboote
         ({ pkgs, lib, ... }: {
           environment.systemPackages = [ pkgs.sbctl ];
@@ -40,6 +43,7 @@
           };
         })
 
+        # AGENIX
         agenix.nixosModules.default
         { environment.systemPackages = [ agenix.packages.x86_64-linux.default ]; }
 
