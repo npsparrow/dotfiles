@@ -61,6 +61,7 @@ in
 
     xkb.layout = "us";
     libinput.enable = true;
+    libinput.touchpad.disableWhileTyping = true;
     displayManager.defaultSession = "none+bspwm";
     displayManager.autoLogin = {
       enable = true;

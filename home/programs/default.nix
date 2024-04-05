@@ -41,6 +41,7 @@
     tree
     acpi
     zathura
+    glow
     # gnupg
 
     # nix related
@@ -49,10 +50,7 @@
     # with more details log output
     # nix-output-monitor
 
-    # productivity
-    # hugo # static site generator
-    # glow # markdown previewer in terminal
-
+    # process monitoring
     btop  # replacement of htop/nmon
     iotop # io monitoring
     iftop # network monitoring
@@ -62,13 +60,25 @@
     ltrace # library call monitoring
     lsof # list open files
 
-    # # system tools
+    # system tools
     sysstat
     lm_sensors # for `sensors` command
     ethtool
     pciutils # lspci
     usbutils # lsusb
   ];
+
+  programs.zathura = {
+    enable = true;
+    # SET UP SYNCTEX
+    # options = {
+    #   synctex = "true";
+    #   synctex-editor-command = "emacsclient +%{line} +%{input}";
+    # };
+    mappings = {
+      "<C-i>" = "recolor";
+    };
+  };
 
   # basic configuration of git, please change to your own
   programs.git = {

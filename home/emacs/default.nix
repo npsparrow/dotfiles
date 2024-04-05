@@ -1,5 +1,7 @@
 { pkgs, config, ... }:
-{
+let
+  LSPs = [ pkgs.clang pkgs.nil ];
+in {
   programs.emacs = {
     enable = true;
     package = pkgs.emacs;
@@ -46,19 +48,11 @@
       poetry
       # nix-mode
       nix-ts-mode
-
-
-    ];
+    ] ++ LSPs;
   };
   services.emacs.enable = true; # enable emacs daemon
   services.emacs.defaultEditor = true; 
 
-  # LSPs
-  home.packages = with pkgs; [
-    clang
-    nil
-  ];
-  
   home.file.".config/emacs" = {
     source = ./config;
     recursive = true;

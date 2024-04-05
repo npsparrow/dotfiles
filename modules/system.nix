@@ -12,30 +12,22 @@ in {
     extraGroups = [ "wheel" ];
   };
 
-  # given the users in this list the right to specify additional substituters via:
-  #    1. `nixConfig.substituers` in `flake.nix`
-  #    2. command line args `--options substituers http://xxx`
-  nix.settings.trusted-users = [username];
-
   # customise /etc/nix/nix.conf declaratively via `nix.settings`
+  nix.settings.trusted-users = [username];
   nix.settings = {
     # enable flakes globally
     experimental-features = ["nix-command" "flakes"];
 
-    # substituters = [
-    #   # cache mirror located in China
-    #   # status: https://mirror.sjtu.edu.cn/
-    #   # "https://mirror.sjtu.edu.cn/nix-channels/store"
-    #   # status: https://mirrors.ustc.edu.cn/status/
-    #   # "https://mirrors.ustc.edu.cn/nix-channels/store"
+    substituters = [
+      "https://cache.nixos.org"
+      "https://nix-community.cachix.org"
+    ];
 
-    #   "https://cache.nixos.org"
-    # ];
-
-    # trusted-public-keys = [
-    #   "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-    # ];
-    # builders-use-substitutes = true;
+    trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
+    builders-use-substitutes = true;
     auto-optimise-store = true;
   };
 
@@ -49,7 +41,7 @@ in {
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # Set your time zone.
+  # Set the time zone.
   time.timeZone = "America/New_York";
   time.hardwareClockInLocalTime = true; 
 
@@ -97,14 +89,15 @@ in {
 
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    vim 
+    devenv
     wget
     curl
     git
     sysstat
     lm_sensors # for `sensors` command
     xfce.thunar # xfce4's file manager
-    ranger # terminal file manager
+    nnn # terminal file manager
     sbctl
     ntfs3g
     man-pages

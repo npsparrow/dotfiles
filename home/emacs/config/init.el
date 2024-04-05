@@ -23,6 +23,14 @@
   electric-indent-inhibit t
   read-file-name-completion-ignore-case t)
 
+(setq ring-bell-function
+      (lambda ()
+        (let ((orig-fg (face-foreground 'mode-line)))
+          (set-face-foreground 'mode-line "#f797dc")
+          (run-with-idle-timer 0.1 nil
+                               (lambda (fg) (set-face-foreground 'mode-line fg))
+                               orig-fg))))
+
 (setq-default fill-column 80)
 (add-hook 'prog-mode-hook 'display-fill-column-indicator-mode)
 
