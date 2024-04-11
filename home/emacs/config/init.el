@@ -127,6 +127,10 @@
      (nix "https://github.com/nix-community/tree-sitter-nix")))
 (setq-default treesit-font-lock-level 4)
 
+(use-package treesit-auto
+  :config
+  (global-treesit-auto-mode))
+
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
@@ -252,6 +256,27 @@ _q_uit          ^        ^         _]_forward
 ;;                          (concat (substring (buffer-file-name) 0 -3) "pdf")
 ;;                          (line-number-at-pos)
 ;;                          (buffer-file-name))))
+
+(defconst notes-directory "/home/nikhil/stuff/notes/")
+(defconst notes-other-directory "src/")
+
+(defun sparrow/check-notes-dir ()
+  (interactive)
+  "Open in org-mode if file in notes dir"
+  (if (when (>= (length buffer-file-name) (length notes-directory))
+        (and (string= notes-directory
+                      (substring buffer-file-name 0 (length notes-directory)))
+             (or (< (length buffer-file-name)
+                    (+ (length notes-directory)
+                       (length notes-other-directory)))
+                 (not (string= notes-other-directory
+                               (substring buffer-file-name
+                                          (length notes-directory)
+                                          (+ (length notes-directory)
+                                             (length notes-other-directory))))))))
+      (org-mode)))
+
+(add-hook 'find-file-hook #'sparrow/check-notes-dir)
 
 (use-package general
 :config
@@ -629,9 +654,8 @@ _q_uit          ^        ^         _]_forward
 
 (use-package eglot
   :hook
-  ((go-ts-mode . eglot-ensure)
-    (rust-ts-mode . eglot-ensure)
-    (haskell-mode . eglot-ensure)))
+    ((c-ts-mode . eglot-ensure))
+     (python-ts-mode . eglot-ensure))
 
 (use-package poetry)
 

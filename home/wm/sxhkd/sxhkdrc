@@ -133,11 +133,11 @@ Print
 
 # Volume Keys
 XF86AudioMute
-	wpctl set-mute @DEFAULT_SINK@ toggle
+        dunst_vol volume_mute
 XF86AudioLowerVolume
-	wpctl set-volume @DEFAULT_SINK@ 2%-
+        dunst_vol volume_down
 XF86AudioRaiseVolume
-	wpctl set-volume @DEFAULT_SINK@ 2%+
+        dunst_vol volume_up
 
 # betterlockscreen
 super + shift + x

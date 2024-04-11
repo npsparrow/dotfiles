@@ -12,9 +12,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     agenix.url = "github:ryantm/agenix";
+    spicetify-nix.url = "github:the-argus/spicetify-nix";
   };
 
-  outputs = { self, nixpkgs, home-manager, lanzaboote, agenix, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, lanzaboote, agenix, spicetify-nix, ... }@inputs: {
     nixosConfigurations.sparrow = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
@@ -29,6 +30,7 @@
           home-manager.useUserPackages = true;
           home-manager.users.nikhil = import ./home;
           # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
+          home-manager.extraSpecialArgs = { inherit spicetify-nix; };
         }
 
         # LANZABOOTE

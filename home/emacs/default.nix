@@ -1,6 +1,10 @@
 { pkgs, config, ... }:
 let
-  LSPs = [ pkgs.clang pkgs.nil ];
+  LSPs = [
+    pkgs.clang
+    pkgs.nil
+    pkgs.nodePackages.pyright
+  ];
 in {
   programs.emacs = {
     enable = true;
@@ -15,6 +19,7 @@ in {
       undo-tree
       # sudo-edit
 
+      treesit-auto
       catppuccin-theme
       rainbow-delimiters
       doom-modeline
@@ -48,10 +53,12 @@ in {
       poetry
       # nix-mode
       nix-ts-mode
-    ] ++ LSPs;
+    ]; 
   };
   services.emacs.enable = true; # enable emacs daemon
   services.emacs.defaultEditor = true; 
+
+  home.packages = LSPs;
 
   home.file.".config/emacs" = {
     source = ./config;

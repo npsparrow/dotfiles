@@ -1,6 +1,44 @@
-{ config, pkgs, ... }:
-
+{ config, pkgs, spicetify-nix, ... }:
+let
+  spicePkgs = spicetify-nix.packages.${pkgs.system}.default;
+  dunst_vol = pkgs.writeScriptBin "dunst_vol" (builtins.readFile ../../scripts/dunst_vol.sh);
+in
 {
+  # basic configuration of git, please change to your own
+  programs.git = {
+    enable = true;
+    delta.enable = true;
+    userName = "Nikhil Panickssery";
+    userEmail = "nikhil.panickssery@gmail.com";
+    extraConfig.init.defaultBranch = "main";
+  };
+
+  imports = [ spicetify-nix.homeManagerModule ];
+  programs.spicetify = {
+      enable = true;
+      theme = spicePkgs.themes.catppuccin;
+      colorScheme = "mocha";
+
+      enabledExtensions = with spicePkgs.extensions; [
+        fullAppDisplay
+        shuffle # shuffle+ (special characters are sanitized out of ext names)
+        hidePodcasts
+        keyboardShortcut
+      ];
+    };
+
+  programs.zathura = {
+    enable = true;
+    # SET UP SYNCTEX
+    # options = {
+    #   synctex = "true";
+    #   synctex-editor-command = "emacsclient +%{line} +%{input}";
+    # };
+    mappings = {
+      "<C-i>" = "recolor";
+    };
+  };
+
   home.packages = with pkgs; [
 
     brave
@@ -10,6 +48,7 @@
     eza
 
     feh
+    dunst_vol
 
     lunarvim
 
@@ -67,37 +106,4 @@
     pciutils # lspci
     usbutils # lsusb
   ];
-
-  programs.zathura = {
-    enable = true;
-    # SET UP SYNCTEX
-    # options = {
-    #   synctex = "true";
-    #   synctex-editor-command = "emacsclient +%{line} +%{input}";
-    # };
-    mappings = {
-      "<C-i>" = "recolor";
-    };
-  };
-
-  # basic configuration of git, please change to your own
-  programs.git = {
-    enable = true;
-    userName = "Nikhil Panickssery";
-    userEmail = "nikhil.panickssery@gmail.com";
-  };
-
-
-  # This value determines the home Manager release that your
-  # configuration is compatible with. This helps avoid breakage
-  # when a new home Manager release introduces backwards
-  # incompatible changes.
-  #
-  # You can update home Manager without changing this value. See
-  # the home Manager release notes for a list of state version
-  # changes in each release.
-  home.stateVersion = "23.11";
-
-  # Let home Manager install and manage itself.
-  programs.home-manager.enable = true;
 }

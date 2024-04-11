@@ -84,6 +84,7 @@
 
     STEAM_API_KEY = "7EDE7F4E57DB19E978AD9B05FC00A412";
     LESSHISTFILE = "-";
+    PYTHON_HISTORY = "$HOME/.local/share/python/history";
 
     # use bat for manpager
     # catppuccin is broken for manpages (see #2115)
