@@ -111,6 +111,8 @@
 (setq treesit-language-source-alist
    '((bash "https://github.com/tree-sitter/tree-sitter-bash")
      (cmake "https://github.com/uyha/tree-sitter-cmake")
+     (c "https://github.com/tree-sitter/tree-sitter-c")
+     (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
      (css "https://github.com/tree-sitter/tree-sitter-css")
      (elisp "https://github.com/Wilfred/tree-sitter-elisp")
      (go "https://github.com/tree-sitter/tree-sitter-go")
@@ -125,6 +127,15 @@
      (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
      (yaml "https://github.com/ikatyang/tree-sitter-yaml")
      (nix "https://github.com/nix-community/tree-sitter-nix")))
+(dolist (lang treesit-language-source-alist)
+  (unless (treesit-language-available-p (car lang))
+    (treesit-install-language-grammar (car lang))))
+(setq treesit-load-name-override-list
+   '((c++ "libtree-sitter-cpp")))
+(add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
+(add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
+(add-to-list 'major-mode-remap-alist
+              '(c-or-c++-mode . c-or-c++-ts-mode))
 (setq-default treesit-font-lock-level 4)
 
 (use-package treesit-auto
@@ -166,6 +177,10 @@
 (use-package evil-surround
   :config
   (global-evil-surround-mode 1))
+
+(use-package evil-tex
+  :hook
+  (LaTeX-mode . evil-tex-mode))
 
 ;; KEYBINDS
 
@@ -277,6 +292,108 @@ _q_uit          ^        ^         _]_forward
       (org-mode)))
 
 (add-hook 'find-file-hook #'sparrow/check-notes-dir)
+
+;; now and today come from journal.el
+(defun now ()
+  "Insert string for the current time formatted like '2:34 PM'."
+  (interactive)                 ; permit invocation in minibuffer
+  (insert (format-time-string "%D %-I:%M %p")))
+
+(defun today ()
+  "Insert string for today's date nicely formatted in American style,
+e.g. Sunday, September 17, 2000."
+  (interactive)                 ; permit invocation in minibuffer
+  (insert (format-time-string "%A, %B %e, %Y")))
+
+;; Get the time exactly 24 hours from now.  This produces three integers,
+;; like the current-time function.  Each integers is 16 bits.  The first and second
+;; together are the count of seconds since Jan 1, 1970.  When the second word
+;; increments above 6535, it resets to zero and carries 1 to the high word.
+;; The third integer is a count of milliseconds (on machines which can produce
+;; this granularity).  The math in the defun below, then, is to accommodate the
+;; way the current-time variable is structured.  That is, the number of seconds
+;; in a day is 86400.  In effect, we add 65536 (= 1 in the high word) + 20864
+;; to the current-time.  However, if 20864 is too big for the low word, if it
+;; would create a sum larger than 65535, then we "add" 2 to the high word and
+;; subtract 44672 from the low word.
+
+(defun tomorrow-time ()
+ "*Provide the date/time 24 hours from the time now in the same format as current-time."
+  (setq
+   now-time (current-time)              ; get the time now
+   hi (car now-time)                    ; save off the high word
+   lo (car (cdr now-time))              ; save off the low word
+   msecs (nth 2 now-time)               ; save off the milliseconds
+   )
+
+  (if (> lo 44671)                      ; If the low word is too big for adding to,
+      (setq hi (+ hi 2)  lo (- lo 44672)) ; carry 2 to the high word and subtract from the low,
+    (setq hi (+ hi 1) lo (+ lo 20864))  ; else, add 86400 seconds (in two parts)
+    )
+  (list hi lo msecs)                    ; regurgitate the new values
+  )
+
+;(tomorrow-time)
+
+(defun tomorrow ()
+  "Insert string for tomorrow's date nicely formatted in American style,
+e.g. Sunday, September 17, 2000."
+  (interactive)                 ; permit invocation in minibuffer
+  (insert (format-time-string "%A, %B %e, %Y" (tomorrow-time)))
+)
+
+;; Get the time exactly 24 hours ago and in current-time format, i.e.,
+;; three integers.  Each integers is 16 bits.  The first and second
+;; together are the count of seconds since Jan 1, 1970.  When the second word
+;; increments above 6535, it resets to zero and carries 1 to the high word.
+;; The third integer is a count of milliseconds (on machines which can produce
+;; this granularity).  The math in the defun below, then, is to accomodate the
+;; way the current-time variable is structured.  That is, the number of seconds
+;; in a day is 86400.  In effect, we subtract (65536 [= 1 in the high word] + 20864)
+;; from the current-time.  However, if 20864 is too big for the low word, if it
+;; would create a sum less than 0, then we subtract 2 from the high word
+;; and add 44672 to the low word.
+
+(defun yesterday-time ()
+"Provide the date/time 24 hours before the time now in the format of current-time."
+  (setq
+   now-time (current-time)              ; get the time now
+   hi (car now-time)                    ; save off the high word
+   lo (car (cdr now-time))              ; save off the low word
+   msecs (nth 2 now-time)               ; save off the milliseconds
+   )
+
+  (if (< lo 20864)                      ; if the low word is too small for subtracting
+      (setq hi (- hi 2)  lo (+ lo 44672)) ; take 2 from the high word and add to the low
+    (setq hi (- hi 1) lo (- lo 20864))  ; else, add 86400 seconds (in two parts)
+    )
+  (list hi lo msecs)                    ; regurgitate the new values
+  )                                     ; end of yesterday-time
+
+(defun yesterday ()
+  "Insert string for yesterday's date nicely formatted in American style,
+e.g. Sunday, September 17, 2000."
+  (interactive)                 ; permit invocation in minibuffer
+  (insert (format-time-string "%A, %B %e, %Y" (yesterday-time)))
+)
+
+(defconst daily-notes-suffix ".daily")
+
+;; filename idea also from journal.el
+(defun todays-note ()
+  "Gets filename of today's daily note"
+  (interactive)
+  (concat (format-time-string "%Y-%m-%d-%a") daily-notes-suffix))
+
+(defun yesterdays-note ()
+  "Gets filename of today's daily note"
+  (interactive)
+  (concat (format-time-string "%Y-%m-%d-%a" (yesterday-time)) daily-notes-suffix))
+
+(defun tomorrows-note ()
+  "Gets filename of today's daily note"
+  (interactive)
+  (concat (format-time-string "%Y-%m-%d-%a" (tomorrow-time)) daily-notes-suffix))
 
 (use-package general
 :config
@@ -637,7 +754,7 @@ _q_uit          ^        ^         _]_forward
   ;; used by `completion-at-point'.  The order of the functions matters, the
   ;; first function returning a result wins.  Note that the list of buffer-local
   ;; completion functions takes precedence over the global list.
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  ;; (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-elisp-block)
   ;;(add-to-list 'completion-at-point-functions #'cape-history)
@@ -654,14 +771,28 @@ _q_uit          ^        ^         _]_forward
 
 (use-package eglot
   :hook
-    ((c-ts-mode . eglot-ensure))
+    ((c-ts-mode . eglot-ensure)
+     (c++-ts-mode . eglot-ensure)
      (python-ts-mode . eglot-ensure))
 
-(use-package poetry)
+(use-package direnv
+  :config
+  (direnv-mode))
+
+;; (use-package poetry)
 
 ;; (use-package nix-mode)
 (use-package nix-ts-mode
   :mode "\\.nix\\'")
+
+(use-package auctex
+  :hook ((LaTeX-mode . visual-line-mode)
+         (LaTeX-mode . flyspell-mode)
+         (LaTeX-mode . LaTeX-math-mode))
+  :config
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq-default TeX-master nil))
 
 ;; Lower threshold back to 8 MiB (default is 800kB)
 (add-hook 'emacs-startup-hook

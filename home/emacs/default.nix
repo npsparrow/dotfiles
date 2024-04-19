@@ -32,6 +32,8 @@ in {
       evil
       evil-collection
       evil-surround
+      evil-tex
+
 
       hydra
       general
@@ -50,9 +52,11 @@ in {
       # org-super-agenda
 
       eglot
-      poetry
+      direnv
+      # poetry
       # nix-mode
       nix-ts-mode
+      auctex
     ]; 
   };
   services.emacs.enable = true; # enable emacs daemon

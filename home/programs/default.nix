@@ -47,6 +47,8 @@ in
     xclip
     eza
 
+    texlive.combined.scheme-full
+
     feh
     dunst_vol
 
@@ -64,6 +66,7 @@ in
     yq-go # yaml processor https://github.com/mikefarah/yq
     eza # A modern replacement for ‘ls’
     fzf # A command-line fuzzy finder
+    tldr
 
     # networking tools
     mtr # A network diagnostic tool
