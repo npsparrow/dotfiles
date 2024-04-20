@@ -52,6 +52,8 @@ in {
       # org-super-agenda
 
       eglot
+      just-mode
+      justl
       direnv
       # poetry
       # nix-mode

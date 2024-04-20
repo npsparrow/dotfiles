@@ -170,6 +170,15 @@
   :config
   (evil-mode))
 
+(evil-define-key 'normal justl-mode-map (kbd "?") 'justl-help-popup)
+(evil-define-key 'normal justl-mode-map (kbd "r") 'justl--refresh-buffer)
+(evil-define-key 'normal justl-mode-map (kbd "RET") 'justl-exec-recipe)
+(evil-define-key 'normal justl-mode-map (kbd "<S-return>") 'justl-exec-eshell)
+(evil-define-key 'normal justl-mode-map (kbd "e") 'justl-go-to-recipe)
+(evil-define-key 'normal justl-mode-map (kbd "w") 'justl--exec-recipe-with-args)
+(evil-define-key 'normal justl-mode-map (kbd "W") 'justl-no-exec-eshell)
+
+
 (use-package evil-collection
   :after evil
   :config (evil-collection-init))
@@ -427,11 +436,16 @@ e.g. Sunday, September 17, 2000."
 (sparrow/leader "bs" '(nil :which-key "go to scratch buffer NOT IMPL"))
 
 (sparrow/leader "g" '(nil :which-key "magit"))
-
 (sparrow/leader "gg" '((lambda () (interactive)(magit-status))
                       :which-key "view git status"))
 (sparrow/leader "gi" '((lambda () (interactive)(magit-init))
                       :which-key "init new repo"))
+
+(sparrow/leader "j" '(nil :which-key "justl stuff"))
+(sparrow/leader "jj" '(justl :which-key "justl"))
+(sparrow/leader "jd" '(justl-exec-default-recipe :which-key "run default recipe"))
+(sparrow/leader "je" '(justl-exec-recipe-in-dir :which-key "exec recipe"))
+(sparrow/leader "jr" '(justl-recompile :which-key "rerun last recipe"))
 
 (sparrow/leader "f" '(nil :which-key "find common files"))
 (sparrow/leader "ft" '((lambda () (interactive)(find-file "~/stuff/notes/todo"))
@@ -773,7 +787,10 @@ e.g. Sunday, September 17, 2000."
   :hook
     ((c-ts-mode . eglot-ensure)
      (c++-ts-mode . eglot-ensure)
-     (python-ts-mode . eglot-ensure))
+     (python-ts-mode . eglot-ensure)))
+
+(use-package just-mode)
+(use-package justl)
 
 (use-package direnv
   :config
