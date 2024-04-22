@@ -9,7 +9,7 @@ in {
     isNormalUser = true;
     useDefaultShell = true;
     description = "nikhil";
-    extraGroups = [ "wheel" ];
+    extraGroups = [ "wheel" "docker" ];
   };
 
   # customise /etc/nix/nix.conf declaratively via `nix.settings`
@@ -50,6 +50,10 @@ in {
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
+
+  # Install docker.
+  virtualisation.docker.enable = true;
+  virtualisation.docker.storageDriver = "btrfs";
 
   fonts = {
     packages = with pkgs; [
