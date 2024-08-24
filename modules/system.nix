@@ -116,7 +116,7 @@ in {
   ];
   documentation.dev.enable = true;
 
-  sound.enable = false;               # ALSA
+  # sound.enable = false;               # ALSA; NO LONGER HAS ANY EFFECT
   hardware.pulseaudio.enable = false; # pulseaudio
 
   services.power-profiles-daemon.enable = true;

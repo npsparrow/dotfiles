@@ -87,12 +87,12 @@
         offset = "30x30";
       };
 
-      shortcuts = {
-        close = "ctrl+space";
-        close_all = "ctrl+shift+space";
-        history = "ctrl+grave";
-        context = "ctrl+shift+period";
-      };
+      # shortcuts = {
+      #   close = "ctrl+space";
+      #   close_all = "ctrl+shift+space";
+      #   history = "ctrl+grave";
+      #   context = "ctrl+shift+period";
+      # };
 
       urgency_low = {
         background = "#131519";
