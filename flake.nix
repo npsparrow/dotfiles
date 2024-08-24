@@ -34,6 +34,7 @@
           home-manager.users.nikhil = import ./home;
           # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
           home-manager.extraSpecialArgs = { inherit spicetify-nix; };
+          home-manager.backupFileExtension = "hm-backup"; # this... fixed something? idk
         }
 
         # LANZABOOTE
