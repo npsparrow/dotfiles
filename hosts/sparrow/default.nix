@@ -52,25 +52,9 @@ in
   };
 
   # Enable the X11 windowing system.
-  hardware.opengl.enable = true;
-  hardware.opengl.extraPackages = [ pkgs.mesa.drivers ];
-  services.xserver = {
-    enable = true;
-    videoDrivers = [ "amdgpu" ];
+  hardware.graphics.enable = true;
+  hardware.graphics.extraPackages = [ pkgs.mesa.drivers ];
 
-    windowManager.bspwm.enable = true;
-
-    xkb.layout = "us";
-    libinput.enable = true;
-    libinput.touchpad.disableWhileTyping = true;
-    displayManager.defaultSession = "none+bspwm";
-    displayManager.autoLogin = {
-      enable = true;
-      user = "nikhil";
-    };
-  };
-
-  
   # enable autorandr and hotplug
   services.autorandr = {
     enable = true;

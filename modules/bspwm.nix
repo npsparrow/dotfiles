@@ -4,13 +4,19 @@
   services.xserver = {
     enable = true;
     videoDrivers = [ "amdgpu" ];
-
     windowManager.bspwm.enable = true;
-
     xkb.layout = "us";
-    libinput.enable = true;
-    displayManager.defaultSession = "none+bspwm";
-    displayManager.autoLogin = {
+  };
+
+  services.libinput = {
+    enable = true;
+    touchpad.disableWhileTyping = true;
+  };
+
+  services.displayManager = {
+    enable = true;
+    defaultSession = "none+bspwm";
+    autoLogin = {
       enable = true;
       user = "nikhil";
     };
