@@ -1,10 +1,10 @@
 { pkgs, config, ... }:
 let
-  LSPs = [
-    pkgs.clang
-    pkgs.nil
-    pkgs.nodePackages.pyright
-  ];
+  # LSPs = [
+  #   pkgs.clang
+  #   pkgs.nil
+  #   pkgs.nodePackages.pyright
+  # ];
 in {
   programs.emacs = {
     enable = true;
@@ -46,7 +46,8 @@ in {
       orderless
 
       cape
-      # yasnippet
+      yasnippet
+      yasnippet-snippets
 
       # toc-org
       # org-super-agenda
@@ -54,17 +55,17 @@ in {
       eglot
       just-mode
       justl
-      direnv
-      # poetry
-      # nix-mode
-      nix-ts-mode
+      envrc
+      # direnv
+      nix-mode
+      # nix-ts-mode
       auctex
     ]; 
   };
   services.emacs.enable = true; # enable emacs daemon
   services.emacs.defaultEditor = true; 
 
-  home.packages = LSPs;
+  # home.packages = LSPs;
 
   home.file.".config/emacs" = {
     source = ./config;

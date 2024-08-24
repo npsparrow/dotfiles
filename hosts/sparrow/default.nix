@@ -30,14 +30,15 @@ in
   };
 
   
-  networking.hostName = "sparrow"; 	# Define your hostname.
+  networking.hostName = "sparrow";
   age.secrets.wireless.file = ../../secrets/wireless.age;
   networking.wireless.environmentFile = "${config.age.secrets.wireless.path}";
   networking.wireless = {
-    enable = true;  			# Enables wireless support via wpa_supplicant.
+    enable = true;  			          # Enables wireless support via wpa_supplicant.
     userControlled.enable = true; 	# Enables support for wpa_cli and wpa_gui
     networks = {
       "peregrine".pskRaw = "@PSK_PEREGRINE@";
+      "enkay".pskRaw = "@PSK_HOME@";
       "rpi_wpa2" = {
         auth = ''
           key_mgmt=WPA-EAP
@@ -70,6 +71,7 @@ in
   };
 
   
+  # enable autorandr and hotplug
   services.autorandr = {
     enable = true;
     defaultTarget = "laptop";
@@ -97,7 +99,7 @@ in
           DisplayPort-1-0 = {
             enable = true;
             primary = true;
-            position = "0x1080";
+            position = "1920x0";
             mode = "1920x1080";
             rate = "240.00";
           };
@@ -112,7 +114,7 @@ in
       };
     };
   };
-  # services.udev.extraRules = ''ACTION=="change", SUBSYSTEM=="drm", RUN+="${pkgs.autorandr}/bin/autorandr -c"''; 
+  services.udev.extraRules = ''ACTION=="change", SUBSYSTEM=="drm", RUN+="${pkgs.autorandr}/bin/autorandr -c"''; 
 
   systemd = {
     user.services.polkit-gnome-authentication-agent-1 = {
@@ -149,7 +151,7 @@ in
   systemd.mounts = [{
     description = "Mount veracrypt partition";
     wantedBy = [ "multi-user.target" ];
-    after = ["veradecrypt.service"];
+    after = ["veradecrypt.service"]; # which of these three things matters?
     requires = ["veradecrypt.service"];
     bindsTo = ["veradecrypt.service"];
     unitConfig = {
@@ -180,23 +182,9 @@ in
   };
 
 
-  # This option defines the first version of NixOS you have installed on this particular machine,
-  # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
-  #
-  # Most users should NEVER change this value after the initial install, for any reason,
-  # even if you've upgraded your system to a new NixOS release.
-  #
-  # This value does NOT affect the Nixpkgs version your packages and OS are pulled from,
-  # so changing it will NOT upgrade your system.
-  #
-  # This value being lower than the current NixOS release does NOT mean your system is
-  # out of date, out of support, or vulnerable.
-  #
-  # Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,
-  # and migrated your data accordingly.
-  #
-  # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
-  system.stateVersion = "23.11"; # Did you read the comment?
+  # For more information, see `man configuration.nix` or
+  # https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
+  system.stateVersion = "23.11";
 
 }
 

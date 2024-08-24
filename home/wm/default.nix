@@ -46,7 +46,6 @@
   services.dunst = {
     enable = true;
     settings = {
-
       global = {
         font = "Lilex Nerd Font Mono Regular 14";
         allow_markup = "yes";

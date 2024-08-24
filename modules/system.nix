@@ -12,6 +12,13 @@ in {
     extraGroups = [ "wheel" "docker" ];
   };
 
+  nix.registry.sparrow.to = {
+    owner = "npsparrow";
+    repo = "flake_templates";
+    type = "github";
+  };
+
+
   # customise /etc/nix/nix.conf declaratively via `nix.settings`
   nix.settings.trusted-users = [username];
   nix.settings = {

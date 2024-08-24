@@ -306,13 +306,13 @@ _q_uit          ^        ^         _]_forward
 (defun now ()
   "Insert string for the current time formatted like '2:34 PM'."
   (interactive)                 ; permit invocation in minibuffer
-  (insert (format-time-string "%D %-I:%M %p")))
+  (format-time-string "%D %-I:%M %p"))
 
 (defun today ()
   "Insert string for today's date nicely formatted in American style,
 e.g. Sunday, September 17, 2000."
   (interactive)                 ; permit invocation in minibuffer
-  (insert (format-time-string "%A, %B %e, %Y")))
+  (format-time-string "%A, %B %e %Y"))
 
 ;; Get the time exactly 24 hours from now.  This produces three integers,
 ;; like the current-time function.  Each integers is 16 bits.  The first and second
@@ -758,6 +758,7 @@ e.g. Sunday, September 17, 2000."
          ("M-p a" . cape-abbrev)
          ("M-p l" . cape-line)
          ("M-p w" . cape-dict)
+         ("M-p :" . cape-emoji)
          ("M-p \\" . cape-tex)
          ("M-p _" . cape-tex)
          ("M-p ^" . cape-tex)
@@ -771,36 +772,47 @@ e.g. Sunday, September 17, 2000."
   ;; (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-elisp-block)
-  ;;(add-to-list 'completion-at-point-functions #'cape-history)
-  (add-to-list 'completion-at-point-functions #'cape-keyword)
-  (add-to-list 'completion-at-point-functions #'cape-tex)
-  ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
-  ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
-  ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
-  ;;(add-to-list 'completion-at-point-functions #'cape-dict)
-  ;;(add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
-  ;;(add-to-list 'completion-at-point-functions #'cape-line)
+  ;; (add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
+  ;; (add-to-list 'completion-at-point-functions #'cape-history)
+  ;; (add-to-list 'completion-at-point-functions #'cape-keyword)
+  ;; (add-to-list 'completion-at-point-functions #'cape-tex)
+  ;; (add-to-list 'completion-at-point-functions #'cape-sgml)
+  ;; (add-to-list 'completion-at-point-functions #'cape-rfc1345)
+  ;; (add-to-list 'completion-at-point-functions #'cape-abbrev)
+  ;; (add-to-list 'completion-at-point-functions #'cape-dict)
+  ;; (add-to-list 'completion-at-point-functions #'cape-line)
 )
 
+(use-package yasnippet
+  :init (setq yas-snippet-dirs '("~/nixos-config/home/emacs/snippets"))
+  :config (yas-global-mode 1))
+
+(defun my-yas-try-expanding-auto-snippets ()
+  (when yas-minor-mode
+    (let ((yas-buffer-local-condition ''(require-snippet-condition . auto)))
+      (yas-expand))))
+(add-hook 'post-command-hook #'my-yas-try-expanding-auto-snippets)
 
 (use-package eglot
   :hook
     ((c-ts-mode . eglot-ensure)
      (c++-ts-mode . eglot-ensure)
      (python-ts-mode . eglot-ensure)))
+;; TEST !!
 
 (use-package just-mode)
 (use-package justl)
 
-(use-package direnv
-  :config
-  (direnv-mode))
+(use-package envrc
+  :hook (after-init . envrc-global-mode))
 
-;; (use-package poetry)
+;; (use-package direnv
+;;   :config
+;;   (direnv-mode))
 
-;; (use-package nix-mode)
-(use-package nix-ts-mode
-  :mode "\\.nix\\'")
+(use-package nix-mode)
+;; (use-package nix-ts-mode
+;;   :mode "\\.nix\\'")
 
 (use-package auctex
   :hook ((LaTeX-mode . visual-line-mode)

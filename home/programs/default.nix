@@ -46,6 +46,7 @@ in
     maim 
     xclip
     eza
+    just
 
     texlive.combined.scheme-full
 
