@@ -3,6 +3,11 @@
 # SXHKD
 pgrep -x sxhkd > /dev/null || sxhkd &
 
+# PICOM
+# i think i broke it somewhere else :shrug:
+systemctl --user import-environment XAUTHORITY DISPLAY
+systemctl --user start picom.service
+
 # MONITORS
 autorandr -c
 

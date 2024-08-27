@@ -11,6 +11,12 @@
   home = {
     username = "nikhil";
     homeDirectory = "/home/nikhil";
+    pointerCursor = {
+      name = "phinger-cursors-dark";
+      package = pkgs.phinger-cursors;
+      size = 16;
+      gtk.enable = true;
+    };
   };
 
   # This value determines the home Manager release that your

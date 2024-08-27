@@ -56,6 +56,11 @@
       autosuggestion.enable = true;
       autocd = true;
 
+      profileExtra = ''
+if [[ -z "$DISPLAY" ]] && [[ $(tty) = /dev/tty1 ]]; then
+  exec startx
+fi
+'';
       shellAliases = {
         l = "eza --icons -F -H --group-directories-first --git -1 -alF";
         ls = "eza --icons -F -H --group-directories-first --git -1 -alF";

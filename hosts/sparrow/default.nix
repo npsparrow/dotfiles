@@ -54,6 +54,7 @@ in
   # Enable the X11 windowing system.
   hardware.graphics.enable = true;
   hardware.graphics.extraPackages = [ pkgs.mesa.drivers ];
+  # hardware.graphics.driSupport = true;
 
   # enable autorandr and hotplug
   services.autorandr = {
