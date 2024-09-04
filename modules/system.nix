@@ -9,7 +9,7 @@ in {
     isNormalUser = true;
     useDefaultShell = true;
     description = "nikhil";
-    extraGroups = [ "wheel" "docker" ];
+    extraGroups = [ "wheel" "docker" "video" ];
   };
 
   nix.registry.sparrow.to = {

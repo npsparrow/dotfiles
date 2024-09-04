@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: daily-note-template
+# key: .daily
+# --
+#+title: `(today)`
+#+author: Nikhil Panickssery
+# ---------------------------
+<< [[`(yesterdays-note)`][Yesterday]] | [[`(tomorrows-note)`][Tomorrow]] >>
+* To-Do
+ - [ ] $1
+
+* Notes

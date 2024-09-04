@@ -50,6 +50,7 @@ in
     xclip
     eza
     just
+    cachix
 
     texlive.combined.scheme-full
 

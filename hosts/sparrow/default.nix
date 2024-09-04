@@ -84,14 +84,14 @@ in
           DisplayPort-1-0 = {
             enable = true;
             primary = true;
-            position = "1920x0";
+            position = "0x0";
             mode = "1920x1080";
             rate = "240.00";
           };
           eDP = {
             enable = true;
             primary = false;
-            position = "0x0";
+            position = "1920x0";
             mode = "1920x1080";
             rate = "300.00";
           };
@@ -158,9 +158,10 @@ in
     # openFirewall = true;
   };
 
+  programs.mtr.enable = true;
+  programs.light.enable = true;
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
-  programs.mtr.enable = true;
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;

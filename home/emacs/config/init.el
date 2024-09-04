@@ -284,24 +284,6 @@ _q_uit          ^        ^         _]_forward
 (defconst notes-directory "/home/nikhil/stuff/notes/")
 (defconst notes-other-directory "src/")
 
-(defun sparrow/check-notes-dir ()
-  (interactive)
-  "Open in org-mode if file in notes dir"
-  (if (when (>= (length buffer-file-name) (length notes-directory))
-        (and (string= notes-directory
-                      (substring buffer-file-name 0 (length notes-directory)))
-             (or (< (length buffer-file-name)
-                    (+ (length notes-directory)
-                       (length notes-other-directory)))
-                 (not (string= notes-other-directory
-                               (substring buffer-file-name
-                                          (length notes-directory)
-                                          (+ (length notes-directory)
-                                             (length notes-other-directory))))))))
-      (org-mode)))
-
-(add-hook 'find-file-hook #'sparrow/check-notes-dir)
-
 ;; now and today come from journal.el
 (defun now ()
   "Insert string for the current time formatted like '2:34 PM'."
@@ -312,7 +294,7 @@ _q_uit          ^        ^         _]_forward
   "Insert string for today's date nicely formatted in American style,
 e.g. Sunday, September 17, 2000."
   (interactive)                 ; permit invocation in minibuffer
-  (format-time-string "%A, %B %e %Y"))
+  (format-time-string "%A, %d %B %Y"))
 
 ;; Get the time exactly 24 hours from now.  This produces three integers,
 ;; like the current-time function.  Each integers is 16 bits.  The first and second
@@ -348,7 +330,7 @@ e.g. Sunday, September 17, 2000."
   "Insert string for tomorrow's date nicely formatted in American style,
 e.g. Sunday, September 17, 2000."
   (interactive)                 ; permit invocation in minibuffer
-  (insert (format-time-string "%A, %B %e, %Y" (tomorrow-time)))
+  (insert (format-time-string "%A, %d %B %Y" (tomorrow-time)))
 )
 
 ;; Get the time exactly 24 hours ago and in current-time format, i.e.,
@@ -383,7 +365,7 @@ e.g. Sunday, September 17, 2000."
   "Insert string for yesterday's date nicely formatted in American style,
 e.g. Sunday, September 17, 2000."
   (interactive)                 ; permit invocation in minibuffer
-  (insert (format-time-string "%A, %B %e, %Y" (yesterday-time)))
+  (insert (format-time-string "%A, %d %B %Y" (yesterday-time)))
 )
 
 (defconst daily-notes-suffix ".daily")
@@ -403,6 +385,12 @@ e.g. Sunday, September 17, 2000."
   "Gets filename of today's daily note"
   (interactive)
   (concat (format-time-string "%Y-%m-%d-%a" (tomorrow-time)) daily-notes-suffix))
+
+;;;;;;;;;;;;; MORE ORG STUFF
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package general
 :config
@@ -452,12 +440,11 @@ e.g. Sunday, September 17, 2000."
                                 :which-key "todo page"))
 (sparrow/leader "fd" '((lambda () (interactive)(find-file (concat notes-directory (todays-note))))
                                 :which-key "today\'s daily note"))
-(sparrow/leader "fe" '((lambda () (interactive)(find-file "~/.config/emacs/settings.org"))
+(sparrow/leader "fe" '((lambda () (interactive)
+                         (find-file "~/nixos-config/home/emacs/config/init.el"))
                                 :which-key "emacs config"))
 (sparrow/leader "fi" '((lambda () (interactive)(find-file "~/stuff/notes/index"))
                                 :which-key "notes index"))
-(sparrow/leader "fh" '((lambda () (interactive)(find-file "~/.config/hypr/hyprland.conf"))
-                                :which-key "hyprland config"))
 
 (sparrow/leader "c" '(nil :which-key "misc"))
 (sparrow/leader "cz" '(hydra-text-scale/body :which-key "zoom hydra"))
@@ -787,11 +774,11 @@ e.g. Sunday, September 17, 2000."
   :init (setq yas-snippet-dirs '("~/nixos-config/home/emacs/snippets"))
   :config (yas-global-mode 1))
 
-(defun my-yas-try-expanding-auto-snippets ()
-  (when yas-minor-mode
-    (let ((yas-buffer-local-condition ''(require-snippet-condition . auto)))
-      (yas-expand))))
-(add-hook 'post-command-hook #'my-yas-try-expanding-auto-snippets)
+;; (defun my-yas-try-expanding-auto-snippets ()
+;;   (when yas-minor-mode
+;;     (let ((yas-buffer-local-condition ''(require-snippet-condition . auto)))
+;;       (yas-expand))))
+;; (add-hook 'post-command-hook #'my-yas-try-expanding-auto-snippets)
 
 (use-package eglot
   :hook
