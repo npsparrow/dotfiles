@@ -7,6 +7,17 @@
     enable = true;
     script = "";
     settings = {
+      "global/wm" = {
+        margin-bottom = 0;
+        margin-top = 0;
+      };
+
+      "bar/main" = {
+        monitor = "''${env:MONITOR:}";
+        monitor-strict = false;
+        monitor-redirect = false;
+      };
+
       "bar/one" = {
         width = "7%";
         height = 28;

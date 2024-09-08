@@ -5,8 +5,8 @@
 #+title: `(today)`
 #+author: Nikhil Panickssery
 # ---------------------------
-<< [[`(yesterdays-note)`][Yesterday]] | [[`(tomorrows-note)`][Tomorrow]] >>
+<< [[file:`(yesterdays-note)`][Yesterday]] | [[file:`(tomorrows-note)`][Tomorrow]] >>
 * To-Do
- - [ ] $1
+ - [ ] $0
 
 * Notes

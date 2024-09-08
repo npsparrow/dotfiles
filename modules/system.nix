@@ -66,6 +66,9 @@ in {
     packages = with pkgs; [
       # icon fonts
       material-design-icons
+      material-icons
+      material-symbols
+      icomoon-feather
 
       # normal fonts
       noto-fonts
@@ -73,7 +76,6 @@ in {
       noto-fonts-emoji
 
       # polybar default font
-      # TEMPORARY
       siji
 
       # nerdfonts

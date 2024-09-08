@@ -139,6 +139,12 @@ XF86AudioLowerVolume
 XF86AudioRaiseVolume
         dunst_vol volume_up
 
+# brightness keys
+XF86MonBrightnessUp
+        dunst_vol brightness_up
+XF86MonBrightnessDown
+        dunst_vol brightness_down
+
 # betterlockscreen
 super + shift + x
         betterlockscreen -l dim

@@ -167,6 +167,8 @@ in
     enableSSHSupport = true;
   };
 
+  services.asusd.enable = true;
+
 
   # For more information, see `man configuration.nix` or
   # https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .

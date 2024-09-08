@@ -1,3 +1,21 @@
+# -*- after-save-hook: (org-babel-tangle); before-save-hook: (delete-trailing-whitespace)-*-
+#+title: Emacs Configuration
+#+author: Nikhil Panickssery
+#+property: header-args:emacs-lisp :exports code :results none :tangle init.el
+# ---------------------------
+* Table of contents
+
+* Introduction
+This is my literate Emacs configuration. It's organized into sections for easier
+navigation and understanding. Each section contains explanations of the
+configurations and their purposes.
+
+...at least that's the ideal scenario. Hopefully I follow through!
+
+* Basic settings
+Start-up & basic appearance stuff.
+
+#+begin_src emacs-lisp
 ;; -*- lexical binding: t; -*-
 
 ;; minimize garbage collection during startup
@@ -82,6 +100,12 @@
                     :weight 'normal
                     :width 'normal)
 
+#+end_src
+
+* Package management
+Auto package update.
+
+#+begin_src emacs-lisp
 (use-package auto-package-update
   :custom
   (auto-package-update-interval 7)
@@ -89,7 +113,12 @@
   (auto-package-update-hide-results t)
   :config
   (auto-package-update-maybe))
+#+end_src
 
+* Utility
+Which-key, helpful, magit, undo-tree.
+
+#+begin_src emacs-lisp
 (use-package which-key
   :config (which-key-mode))
 
@@ -107,7 +136,12 @@
   :config
   (setq undo-tree-history-directory-alist '(("." . "~/.config/emacs/undo")))
   (global-undo-tree-mode 1))
+#+end_src
 
+* UI and theming
+Catppuccin, treesitter, doom-modeline.
+
+#+begin_src emacs-lisp
 (use-package catppuccin-theme
   ;; :hook (server-after-make-frame-hook . catppuccin-reload)
   :config
@@ -158,7 +192,11 @@
 (use-package nerd-icons
   :custom
   (nerd-icons-font-family "Lilex Nerd Font Mono"))
+#+end_src
 
+* Evil mode
+
+#+begin_src emacs-lisp
 (use-package evil
   :after undo-tree
   :init
@@ -194,7 +232,11 @@
 (use-package evil-tex
   :hook
   (LaTeX-mode . evil-tex-mode))
+#+end_src
 
+* Hydra keybindings
+
+#+begin_src emacs-lisp
 (use-package hydra)
 
 (defhydra hydra-text-scale (:timeout 4)
@@ -282,7 +324,11 @@ _q_uit          ^        ^         _]_forward
 ;;                          (concat (substring (buffer-file-name) 0 -3) "pdf")
 ;;                          (line-number-at-pos)
 ;;                          (buffer-file-name))))
+#+end_src
 
+* Org-mode and note-taking
+
+#+begin_src emacs-lisp
 (defconst notes-directory "/home/nikhil/stuff/notes/")
 (defconst notes-other-directory "src/")
 
@@ -411,7 +457,11 @@ e.g. Sunday, September 17, 2000."
   "Gets filename of today's daily note"
   (interactive)
   (concat (format-time-string "%Y-%m-%d-%a" (tomorrow-time)) daily-notes-suffix))
+#+end_src
 
+* General keybindings
+
+#+begin_src emacs-lisp
 (use-package general
 :config
 (general-evil-setup t)
@@ -475,7 +525,12 @@ e.g. Sunday, September 17, 2000."
 
 
 (sparrow/leader "t" '(org-todo :which-key "set TODO heading")))
+#+end_src
 
+* Completion framework
+Vertico, consult, orderless, marginalia; corfu, cape.
+
+#+begin_src emacs-lisp
 (use-package vertico
   :init
   (vertico-mode))
@@ -802,7 +857,11 @@ e.g. Sunday, September 17, 2000."
 ;;     (let ((yas-buffer-local-condition ''(require-snippet-condition . auto)))
 ;;       (yas-expand))))
 ;; (add-hook 'post-command-hook #'my-yas-try-expanding-auto-snippets)
+#+end_src
 
+* Development tools
+
+#+begin_src emacs-lisp
 (use-package eglot
   :hook
     ((c-ts-mode . eglot-ensure)
@@ -832,8 +891,13 @@ e.g. Sunday, September 17, 2000."
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
   (setq-default TeX-master nil))
+#+end_src
 
+* Miscellaneous
+
+#+begin_src emacs-lisp
 ;; Lower threshold back to 8 MiB (default is 800kB)
 (add-hook 'emacs-startup-hook
           (lambda ()
             (setq gc-cons-threshold (* 2 1000 1000))))
+#+end_src

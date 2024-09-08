@@ -45,3 +45,7 @@ bspc rule -a Zathura state=tiled
 
 # WALLPAPER
 feh --bg-scale /home/nikhil/.config/bspwm/walls/mononoke.jpg --no-fehbg
+
+# INITIAL BRIGHTNESS
+brightness=$(cat "$HOME/.config/sparrow/.brightness")
+light -s sysfs/backlight/amdgpu_bl2 -S $brightness

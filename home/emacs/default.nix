@@ -12,6 +12,8 @@ in {
     # query packages with `nix-env -f '<nixpkgs>' -qaP -A emacsPackages`
     extraPackages = epkgs: with epkgs; [
       use-package
+      auto-package-update
+
       which-key
       helpful
       magit

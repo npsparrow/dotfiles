@@ -42,6 +42,7 @@
 
     ranger.enable = true;
 
+    zoxide.enable = true;
     
     # ========================
     # ZSH

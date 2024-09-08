@@ -21,7 +21,7 @@
     recursive = true;
   };
 
-  # Install picom and enable its service
+  # install picom and enable its service
   services.picom = {
     enable = true;
     opacityRules = [
@@ -30,7 +30,7 @@
     ];
   };
 
-  # install rofi and configure
+  # configure rofi
   home.file.".config/rofi" = {
     source = ./rofi;
     recursive = true;
