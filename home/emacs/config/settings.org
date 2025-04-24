@@ -3,8 +3,6 @@
 #+author: Nikhil Panickssery
 #+property: header-args:emacs-lisp :exports code :results none :tangle init.el
 # ---------------------------
-* Table of contents
-
 * Introduction
 This is my literate Emacs configuration. It's organized into sections for easier
 navigation and understanding. Each section contains explanations of the
@@ -75,9 +73,6 @@ Start-up & basic appearance stuff.
 ;; auto update on change in buffer
 (global-auto-revert-mode t)
 
-;; remember cursor location
-(save-place-mode 1)
-
 ;; highlighting!
 (setq org-src-fontify-natively t)
 (setq org-src-preserve-indentation t)
@@ -95,7 +90,7 @@ Start-up & basic appearance stuff.
 (setq display-line-numbers-type 'relative)
 
 (set-face-attribute 'default nil
-                    :family "Lilex Nerd Font"
+                    :family "Maple Mono NF"
                     :height 110
                     :weight 'normal
                     :width 'normal)
@@ -131,21 +126,122 @@ Which-key, helpful, magit, undo-tree.
 
 (use-package magit)
 
+(use-package smartparens
+  :config
+  (setq sp-highlight-pair-overlay nil)
+  (smartparens-global-mode 1))
+
+
+(sp-local-pair 'LaTeX-mode '"\\[" "\\]")
+(sp-local-pair 'LaTeX-mode "`" nil :actions nil)
+(sp-local-pair 'prog-mode "{" nil :post-handlers '(("||\n[i]" "RET")))
+(sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)           ;; no '' pair in emacs-lisp-mode
+
+
+(defun sparrow/newline-and-enter-sexp (&rest _ignored)
+  "Open a new brace or bracket expression, with relevant newlines and indent. "
+  (newline)
+  (indent-according-to-mode)
+  (forward-line -1)
+  (indent-according-to-mode))
+
+(use-package hl-todo
+  :hook (prog-mode . hl-todo-mode)
+  :config
+  (setq hl-todo-highlight-punctuation ":"
+        hl-todo-keyword-faces
+        `(("TODO"       warning bold)
+          ("FIXME"      error bold)
+          ("HACK"       font-lock-constant-face bold)
+          ("REVIEW"     font-lock-keyword-face bold)
+          ("NOTE"       success bold)
+          ("DEPRECATED" font-lock-doc-face bold))))
+
+
 (use-package undo-tree
   :diminish
   :config
   (setq undo-tree-history-directory-alist '(("." . "~/.config/emacs/undo")))
   (global-undo-tree-mode 1))
+
+(use-package dirvish
+  :config
+  (dirvish-override-dired-mode))
+
+(use-package vterm-toggle
+  :config
+  (setq vterm-toggle-cd-auto-create-buffer nil)
+  (add-to-list 'vterm-keymap-exceptions "<f2>")
+  (global-set-key [f2] 'vterm-toggle)
+  (global-set-key [M-f2] 'vterm-toggle-cd)
+  (define-key vterm-mode-map [(control return)]   #'vterm-toggle-insert-cd)
+  (define-key vterm-mode-map [M-f2]   #'vterm-toggle-cd)
+  (setq vterm-toggle-fullscreen-p nil)
+  (add-to-list 'display-buffer-alist
+              '((lambda (buffer-or-name _)
+                    (let ((buffer (get-buffer buffer-or-name)))
+                      (with-current-buffer buffer
+                        (or (equal major-mode 'vterm-mode)
+                            (string-prefix-p vterm-buffer-name (buffer-name buffer))))))
+                  (display-buffer-reuse-window display-buffer-at-bottom)
+                  ;;(display-buffer-reuse-window display-buffer-in-direction)
+                  ;;display-buffer-in-direction/direction/dedicated is added in emacs27
+                  ;;(direction . bottom)
+                  ;;(dedicated . t) ;dedicated is supported in emacs27
+                  (reusable-frames . visible)
+                  (window-height . 0.3))))
+
+
+(use-package p4)
+
 #+end_src
 
 * UI and theming
 Catppuccin, treesitter, doom-modeline.
 
 #+begin_src emacs-lisp
+(use-package ligature
+  :config
+  (ligature-set-ligatures 't '("www"))
+  (ligature-set-ligatures 'org-mode '("www" "**/" "*>" "*/" "\\\\"
+                                      "\\\\\\" "{-" "::" ":::" ":=" "!="
+                                      "!==" "-}" "----" "-->" "->" "->>" "-<"
+                                      "-<<" "-~" "#{" "#[" "##" "###" "####"
+                                      "#(" "#?" "#_" "#_(" ".-" ".=" ".." "..<"
+                                      "..." "?=" "??" ";;" "/*" "/**" "/=" "/=="
+                                      "</" "/>" "//" "///" "&&" "||" "||=" "|=" "|>"
+                                      "^=" "$>" "++" "+++" "+>" "=:=" "==" "==="
+                                      "==>" "=>" "=>>" "<=" "=<<" "=/=" ">-"
+                                      ">=" ">=>" ">>" ">>-" ">>=" ">>>" "<*"
+                                      "<*>" "<|" "<|>" "<$" "<$>" "<!--" "<-"
+                                      "<--" "<->" "<+" "<+>" "<=" "<==" "<=>"
+                                      "<=<" "<>" "<<" "<<-" "<<=" "<<<" "<~"
+                                      "<~~" "</" "</>" "~@" "~-" "~>" "~~" "~~>"
+                                      "%%"))
+  (ligature-set-ligatures 'prog-mode '("www" "**" "***" "**/" "*>" "*/" "\\\\"
+                                       "\\\\\\" "{-" "::" ":::" ":=" "!!" "!="
+                                       "!==" "-}" "----" "-->" "->" "->>" "-<"
+                                       "-<<" "-~" "#{" "#[" "##" "###" "####"
+                                       "#(" "#?" "#_" "#_(" ".-" ".=" ".." "..<"
+                                       "..." "?=" "??" ";;" "/*" "/**" "/=="
+                                       "/>" "//" "///" "&&" "||" "||=" "|=" "|>"
+                                       "^=" "$>" "++" "+++" "+>" "=:=" "==" "==="
+                                       "==>" "=>" "=>>" "<=" "=<<" "=/=" ">-"
+                                       ">=" ">=>" ">>" ">>-" ">>=" ">>>" "<*"
+                                       "<*>" "<|" "<|>" "<$" "<$>" "<!--" "<-"
+                                       "<--" "<->" "<+" "<+>" "<=" "<==" "<=>"
+                                       "<=<" "<>" "<<" "<<-" "<<=" "<<<" "<~"
+                                       "<~~" "</" "</>" "~@" "~-" "~>" "~~" "~~>"
+                                       "%%" "todo))"))
+  (global-ligature-mode t))
+
 (use-package catppuccin-theme
   ;; :hook (server-after-make-frame-hook . catppuccin-reload)
   :config
   (load-theme 'catppuccin :no-confirm))
+
+(use-package solaire-mode
+  :config (solaire-global-mode +1))
 
 (require 'treesit)
 (setq treesit-language-source-alist
@@ -154,6 +250,7 @@ Catppuccin, treesitter, doom-modeline.
      (c "https://github.com/tree-sitter/tree-sitter-c")
      (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
      (css "https://github.com/tree-sitter/tree-sitter-css")
+     (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
      (elisp "https://github.com/Wilfred/tree-sitter-elisp")
      (go "https://github.com/tree-sitter/tree-sitter-go")
      (html "https://github.com/tree-sitter/tree-sitter-html")
@@ -174,8 +271,9 @@ Catppuccin, treesitter, doom-modeline.
    '((c++ "libtree-sitter-cpp")))
 (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
 (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
-(add-to-list 'major-mode-remap-alist
-              '(c-or-c++-mode . c-or-c++-ts-mode))
+(add-to-list 'major-mode-remap-alist '(c-or-c++-mode . c-or-c++-ts-mode))
+(add-to-list 'auto-mode-alist '("CMakeLists\\.txt\\'" . cmake-ts-mode))
+(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-ts-mode))
 (setq-default treesit-font-lock-level 4)
 
 (use-package treesit-auto
@@ -191,7 +289,65 @@ Catppuccin, treesitter, doom-modeline.
 
 (use-package nerd-icons
   :custom
-  (nerd-icons-font-family "Lilex Nerd Font Mono"))
+  (nerd-icons-font-family "Maple Mono NF"))
+
+;; adapted from https://github.com/emacs-dashboard/emacs-dashboard/issues/459#issuecomment-1845461825
+(use-package dashboard
+  :config
+  (dashboard-setup-startup-hook)
+  ;; :diminish
+  ;; (dashboard-mode page-break-lines-mode)
+  :custom
+  (dashboard-startupify-list '(dashboard-insert-banner
+                                    dashboard-insert-newline
+                                    dashboard-insert-banner-title
+                                    dashboard-insert-newline
+                                    dashboard-insert-init-info
+                                    dashboard-insert-items))
+  (dashboard-center-content t)
+  (dashboard-startup-banner 2)
+  (dashboard-items '((recents  . 10)
+                     (projects .  5)
+                     (agenda   .  5)))
+  (dashboard-display-icons-p t)
+  (dashboard-icon-type 'nerd-icons)
+  (dashboard-set-heading-icons t)
+  (dashboard-set-file-icons t)
+  (dashboard-set-footer nil)
+  :hook
+  (after-init . dashboard-setup-startup-hook))
+
+(setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+(setq dashboard-banner-logo-title
+      (nth (random 7) '("Breathe. You got this."
+                        "Hey you, you're finally awake."
+                        "Hesitation is defeat."
+                        "Sometimes, things have to fall apart to make way for better things."
+                        "Have faith in yourself. You've come so far already."
+                        "The code binds you. How will you interpret it?"
+                        "The trees are whispering. Are you listening?"
+                        "The cake is a lie."
+                        "Be safe, friend. Don't you dare go hollow."
+                        "The trees are whispering. Are you listening?"
+                        "If only I could be so grossly incandescent!")))
+
+#+end_src
+
+I am in love with em dashes.
+
+#+begin_src  emacs-lisp
+(defun sparrow/insert-em-dash ()
+  "Replace three consecutive hyphens with an em dash."
+  (interactive)
+  (let ((prev-chars (buffer-substring-no-properties (- (point) 2) (point))))
+    (if (string= prev-chars "--")
+        (progn
+          (backward-delete-char 2)
+          (insert "—"))
+      (insert "-"))))
+
+;; (global-set-key (kbd "M--") 'insert-em-dash)
+
 #+end_src
 
 * Evil mode
@@ -210,16 +366,21 @@ Catppuccin, treesitter, doom-modeline.
     evil-want-keybinding nil
     evil-want-c-i-jump nil)
   :config
-  (evil-mode))
+  (evil-mode)
+  (evil-set-initial-state 'justl-mode 'emacs))
 
-(evil-define-key 'normal justl-mode-map (kbd "?") 'justl-help-popup)
-(evil-define-key 'normal justl-mode-map (kbd "r") 'justl--refresh-buffer)
-(evil-define-key 'normal justl-mode-map (kbd "RET") 'justl-exec-recipe)
-(evil-define-key 'normal justl-mode-map (kbd "<S-return>") 'justl-exec-eshell)
-(evil-define-key 'normal justl-mode-map (kbd "e") 'justl-go-to-recipe)
-(evil-define-key 'normal justl-mode-map (kbd "w") 'justl--exec-recipe-with-args)
-(evil-define-key 'normal justl-mode-map (kbd "W") 'justl-no-exec-eshell)
+;; (evil-define-key 'normal justl-mode-map (kbd "?") 'justl-help-popup)
+;; (evil-define-key 'normal justl-mode-map (kbd "r") 'justl--refresh-buffer)
+;; (evil-define-key 'normal justl-mode-map (kbd "RET") 'justl-exec-recipe)
+;; (evil-define-key 'normal justl-mode-map (kbd "<S-return>") 'justl-exec-eshell)
+;; (evil-define-key 'normal justl-mode-map (kbd "e") 'justl-go-to-recipe)
+;; (evil-define-key 'normal justl-mode-map (kbd "w") 'justl--exec-recipe-with-args)
+;; (evil-define-key 'normal justl-mode-map (kbd "W") 'justl-no-exec-eshell)
 
+(evil-define-key 'normal Info-mode-map (kbd "gJ") 'Info-next-preorder)
+(evil-define-key 'normal Info-mode-map (kbd "gK") 'Info-last-preorder)
+
+(evil-define-key 'insert 'global (kbd "M--") 'sparrow/insert-em-dash)
 
 (use-package evil-collection
   :after evil
@@ -232,6 +393,30 @@ Catppuccin, treesitter, doom-modeline.
 (use-package evil-tex
   :hook
   (LaTeX-mode . evil-tex-mode))
+
+(use-package avy
+  :config
+  (global-set-key (kbd "M-/") 'avy-goto-char-2))
+
+(use-package vimish-fold
+  :after evil
+  :config
+  ;; (evil-define-key 'normal 'global (kbd "zf") 'vimish-fold)
+  ;; (evil-define-key 'normal vimish-fold-folded-keymap (kbd "zd") 'vimish-fold-delete)
+  ;; (evil-define-key 'normal vimish-fold-unfolded-keymap (kbd "zd") 'vimish-fold-delete)
+  ;; (evil-define-key 'normal vimish-fold-folded-keymap (kbd "zo") 'vimish-fold-unfold)
+  ;; (evil-define-key 'normal vimish-fold-unfolded-keymap (kbd "zc") 'vimish-fold-refold)
+  ;; (evil-define-key 'normal vimish-fold-folded-keymap (kbd "<TAB>") 'vimish-fold-toggle)
+  ;; (evil-define-key 'normal vimish-fold-unfolded-keymap (kbd "<TAB>") 'vimish-fold-toggle)
+  (vimish-fold-global-mode 1))
+
+(use-package evil-vimish-fold
+  :after vimish-fold
+  :init
+  (setq evil-vimish-fold-target-modes '(prog-mode conf-mode))
+  :config
+  (global-evil-vimish-fold-mode))
+
 #+end_src
 
 * Hydra keybindings
@@ -250,17 +435,17 @@ Catppuccin, treesitter, doom-modeline.
    "
 Movement      ^Split^            ^Switch^        ^Resize^
 ----------------------------------------------------------------
-_j_ ←           _v_ertical         _b_uffer        _u_ ←
-_k_ ↓           _h_orizontal       _f_ind files    _i_ ↓
-_l_ ↑           _1_only this       _P_rojectile    _o_ ↑
-_;_ →           _d_elete           _s_wap          _p_ →
+_h_ ←           _v_ertical         _b_uffer        _u_ ←
+_j_ ↓           _s_orizontal       _f_ind files    _i_ ↓
+_k_ ↑           _1_only this       _P_rojectile    _o_ ↑
+_l_ →           _d_elete           _S_wap          _p_ →
 _F_ollow        _e_qualize         _[_backward     _8_0 columns
 _q_uit          ^        ^         _]_forward
 "
-  ("j" windmove-left)
-  ("k" windmove-down)
-  ("l" windmove-up)
-  (";" windmove-right)
+  ("h" windmove-left)
+  ("j" windmove-down)
+  ("k" windmove-up)
+  ("l" windmove-right)
   ("[" previous-buffer)
   ("]" next-buffer)
   ("u" hydra-move-splitter-left)
@@ -271,10 +456,10 @@ _q_uit          ^        ^         _]_forward
   ("f" counsel-find-file)
   ("P" counsel-projectile-find-file)
   ("F" follow-mode)
-  ("s" switch-window-then-swap-buffer)
+  ("S" switch-window-then-swap-buffer)
   ("8" set-80-columns)
   ("v" split-window-right)
-  ("h" split-window-below)
+  ("s" split-window-below)
   ("3" split-window-right)
   ("2" split-window-below)
   ("d" delete-window)
@@ -324,11 +509,24 @@ _q_uit          ^        ^         _]_forward
 ;;                          (concat (substring (buffer-file-name) 0 -3) "pdf")
 ;;                          (line-number-at-pos)
 ;;                          (buffer-file-name))))
+
+
+(defun sparrow/align-comments (beginning end)
+  "Align comments within marked region."
+  (interactive "*r")
+  (let (indent-tabs-mode align-to-tab-stop)
+    (align-regexp beginning end (concat "\\(\\s-*\\)"
+                                        (regexp-quote comment-start)))))
+
 #+end_src
 
 * Org-mode and note-taking
+** Initial stuff
 
 #+begin_src emacs-lisp
+(setq org-startup-folded t)
+(setq org-src-window-setup 'current-window)
+
 (defconst notes-directory "/home/nikhil/stuff/notes/")
 (defconst notes-other-directory "src/")
 
@@ -366,7 +564,7 @@ _q_uit          ^        ^         _]_forward
   "Insert string for today's date nicely formatted in American style,
 e.g. Sunday, September 17, 2000."
   (interactive)                 ; permit invocation in minibuffer
-  (insert (format-time-string day-string)))
+  (format-time-string day-string))
 
 ;; Get the time exactly 24 hours from now.  This produces three integers,
 ;; like the current-time function.  Each integers is 16 bits.  The first and second
@@ -402,7 +600,7 @@ e.g. Sunday, September 17, 2000."
   "Insert string for tomorrow's date nicely formatted in American style,
 e.g. Sunday, September 17, 2000."
   (interactive)                 ; permit invocation in minibuffer
-  (insert (format-time-string "%A, %-d %B %Y" (tomorrow-time)))
+  (format-time-string "%A, %-d %B %Y" (tomorrow-time))
 )
 
 ;; Get the time exactly 24 hours ago and in current-time format, i.e.,
@@ -437,7 +635,7 @@ e.g. Sunday, September 17, 2000."
   "Insert string for yesterday's date nicely formatted in American style,
 e.g. Sunday, September 17, 2000."
   (interactive)                 ; permit invocation in minibuffer
-  (insert (format-time-string "%A, %-d %B %Y" (yesterday-time)))
+  (format-time-string "%A, %-d %B %Y" (yesterday-time))
 )
 
 (defconst daily-notes-suffix ".daily")
@@ -459,6 +657,39 @@ e.g. Sunday, September 17, 2000."
   (concat (format-time-string "%Y-%m-%d-%a" (tomorrow-time)) daily-notes-suffix))
 #+end_src
 
+* Agenda, calendar
+
+#+begin_src emacs-lisp
+(use-package calfw
+  :config
+  (setq cfw:display-calendar-holidays nil)
+  (setq cfw:org-agenda-schedule-args '(:timestamp)))
+(use-package calfw-org)
+
+;; from https://github.com/kiwanami/emacs-calfw
+(defun my-open-calendar ()
+  (interactive)
+  (cfw:open-calendar-buffer
+   :contents-sources
+   (list
+    (cfw:org-create-source "Light Blue")  ; orgmode source
+    ;; (cfw:howm-create-source "Blue")  ; howm source
+    ;; (cfw:cal-create-source "Orange") ; diary source
+    ;; (cfw:ical-create-source "Moon" "~/moon.ics" "Gray")  ; ICS source1
+    ;; (cfw:ical-create-source "gcal" "https://..../basic.ics" "IndianRed") ; google calendar ICS
+   )))
+
+(setq org-agenda-files (list "~/stuff/notes/todo"))
+
+(defun sample-data2 (b e)
+  (list
+    (make-cfw:event :title "Item1"
+          :start-date (cfw:date 9 15 2024)
+          :start-time   (cfw:time 10 30)
+          :end-time   (cfw:time 13 30))))
+
+#+end_src
+
 * General keybindings
 
 #+begin_src emacs-lisp
@@ -472,17 +703,19 @@ e.g. Sunday, September 17, 2000."
   :prefix "SPC")
 
 (general-define-key
- :states '(normal visual motion)
- :keymaps 'LaTeX-mode-map
- "gz" '(sparrow/zathura-goto :which-key "Highlight current line in pdf"))
+  :states '(normal visual motion)
+  :keymaps 'LaTeX-mode-map
+  "gz" '(sparrow/zathura-goto :which-key "Highlight current line in pdf"))
 
 (sparrow/leader "" '(nil :which-key "SPC leader"))
 (sparrow/leader "." '(find-file :which-key "find file"))
 (sparrow/leader "SPC" '(find-file :which-key "find file"))
+(sparrow/leader ">" '(project-find-file :which-key "find file in project"))
 (sparrow/leader "r" '(consult-register :which-key "find file"))
 (sparrow/leader "/" '(consult-line :which-key "search"))
 (sparrow/leader "\`" '(vterm :which-key "vterm"))
 (sparrow/leader "," '(consult-buffer :which-key "switch buffers"))
+(sparrow/leader "<" '(consult-project-buffer :which-key "open buffer in project"))
 (sparrow/leader "TAB" '(treemacs :which-key "open treemacs"))
 (sparrow/leader "a" '(org-agenda-list :which-key "open org-agenda"))
 (sparrow/leader "i" '(cfw:open-org-calendar :which-key "open calendar"))
@@ -499,8 +732,8 @@ e.g. Sunday, September 17, 2000."
 (sparrow/leader "gi" '((lambda () (interactive)(magit-init))
                       :which-key "init new repo"))
 
-(sparrow/leader "j" '(nil :which-key "justl stuff"))
-(sparrow/leader "jj" '(justl :which-key "justl"))
+(sparrow/leader "j" '(nil :which-key "justl"))
+(sparrow/leader "jj" '(justl :which-key "justl buffer"))
 (sparrow/leader "jd" '(justl-exec-default-recipe :which-key "run default recipe"))
 (sparrow/leader "je" '(justl-exec-recipe-in-dir :which-key "exec recipe"))
 (sparrow/leader "jr" '(justl-recompile :which-key "rerun last recipe"))
@@ -518,11 +751,30 @@ e.g. Sunday, September 17, 2000."
 (sparrow/leader "fi" '((lambda () (interactive)(find-file "~/stuff/notes/index"))
                                 :which-key "notes index"))
 
+(sparrow/leader "p" '(nil :which-key "projects"))
+(sparrow/leader "pp" '(project-switch-project :which-key "open project"))
+(sparrow/leader "p," '(consult-project-buffer :which-key "open buffer in project"))
+(sparrow/leader "p." '(project-find-file :which-key "find file in project"))
+(sparrow/leader "pg" '(project-find-regexp :which-key "regexp in project"))
+(sparrow/leader "pk" '(project-kill-buffers :which-key "kill project buffers"))
+;; (sparrow/leader "pp" '(justl :which-key "open file in current project"))
+
+
+(sparrow/leader "C" '(calc :which-key "calc"))
 
 (sparrow/leader "c" '(nil :which-key "misc"))
 (sparrow/leader "cz" '(hydra-text-scale/body :which-key "zoom hydra"))
 (sparrow/leader "cw" '(hydra-window/body :which-key "manage windows"))
+(sparrow/leader "ca" '(nil :which-key "alignment"))
+(sparrow/leader "caa" '(align-regexp :which-key "align regexp"))
+(sparrow/leader "ca/" '(sparrow/align-comments :which-key "align comments"))
 
+
+(sparrow/leader "d" '(dired :which-key "dired"))
+
+(sparrow/leader "a" '(nil :which-key "agenda cmds"))
+(sparrow/leader "aa" '(org-agenda :which-key "org-agenda"))
+(sparrow/leader "ac" '(peregrine/open-calendar :which-key "calendar"))
 
 (sparrow/leader "t" '(org-todo :which-key "set TODO heading")))
 #+end_src
@@ -862,12 +1114,37 @@ Vertico, consult, orderless, marginalia; corfu, cape.
 * Development tools
 
 #+begin_src emacs-lisp
+(use-package vterm)
+
 (use-package eglot
+  :config (setq-default eglot-inlay-hints-mode nil)
   :hook
     ((c-ts-mode . eglot-ensure)
      (c++-ts-mode . eglot-ensure)
      (python-ts-mode . eglot-ensure)))
-;; TEST !!
+(add-hook 'eglot-managed-mode-hook (lambda () (eglot-inlay-hints-mode -1)))
+
+(cl-defmethod project-root ((project (head marker-file)))
+  (cdr project))
+
+(defun project-try-marker (dir)
+  "Find DIR's project root by searching for a `.project.el' file.
+
+If this file exists, it marks the project root.  For convenient
+compatibility with Projectile, `.projectile' is also considered
+a project root marker."
+  (let ((root (or (locate-dominating-file dir ".project.el")
+                  (locate-dominating-file dir ".projectile"))))
+    (when root (cons 'marker-file root))))
+
+(add-hook 'project-find-functions #'project-try-marker)
+
+(use-package meson-mode)
+
+(use-package glsl-mode
+  :config
+  (add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
+  (add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode)))
 
 (use-package just-mode)
 (use-package justl)
@@ -879,18 +1156,56 @@ Vertico, consult, orderless, marginalia; corfu, cape.
 ;;   :config
 ;;   (direnv-mode))
 
+(use-package haskell-mode
+  :config
+  (add-to-list 'eglot-server-programs
+              '(haskell-mode . ("haskell-language-server-wrapper" "--lsp"))))
+
 (use-package nix-mode)
 ;; (use-package nix-ts-mode
 ;;   :mode "\\.nix\\'")
 
+(use-package reformatter)
+(use-package zig-mode
+  :after reformatter
+  :hook (zig-mode . (lambda ()
+                      (setq-local evil-shift-width 4))))
+
+(use-package erlang)
+(use-package prolog)
+
+(use-package rustic
+  :config
+  (setq rustic-format-on-save nil)
+  :custom
+  (rustic-cargo-use-last-stored-arguments t))
+
+(use-package svelte-mode
+  :config
+  (customize-set-variable 'svelte-basic-offset 2))
+
+(defun sparrow/setup-latex ()
+  (setq-local fill-paragraph-function nil))
+
 (use-package auctex
   :hook ((LaTeX-mode . visual-line-mode)
          (LaTeX-mode . flyspell-mode)
-         (LaTeX-mode . LaTeX-math-mode))
+         (LaTeX-mode . LaTeX-math-mode)
+         (LaTeX-mode . sparrow/setup-latex))
   :config
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
-  (setq-default TeX-master nil))
+  (setq-default TeX-master nil)
+  (setq-default TeX-command-extra-options "--shell-escape")
+  (setq TeX-view-program-selection '(((output-dvi has-no-display-manager)
+                                      "dvi2tty")
+                                     ((output-dvi style-pstricks)
+                                      "dvips and gv")
+                                     (output-dvi "xdvi")
+                                     (output-pdf "zathura")
+                                     (output-html "xdg-open")))
+  (add-to-list 'TeX-view-program-list
+               '("zathura" "zathura %o")))
 #+end_src
 
 * Miscellaneous

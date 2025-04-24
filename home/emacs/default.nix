@@ -17,15 +17,24 @@ in {
       which-key
       helpful
       magit
+      smartparens
       # exec-path-from-shell
+      hl-todo
       undo-tree
       # sudo-edit
+      dirvish
+      p4
 
+      ligature
       treesit-auto
+      treesit-grammars.with-all-grammars
       catppuccin-theme
+      solaire-mode
       rainbow-delimiters
       doom-modeline
       nerd-icons
+      dashboard
+      
       # nerd-icons-dired
       # nerd-icons-ibuffer
       
@@ -36,6 +45,11 @@ in {
       evil-surround
       evil-tex
 
+      avy
+      vimish-fold
+
+      calfw
+      calfw-org
 
       hydra
       general
@@ -54,12 +68,23 @@ in {
       # toc-org
       # org-super-agenda
 
+      vterm
+      vterm-toggle
+
       eglot
+      meson-mode
+      glsl-mode
       just-mode
       justl
       envrc
       # direnv
+      haskell-mode
       nix-mode
+      zig-mode
+      erlang
+      rustic
+      reformatter
+      svelte-mode
       # nix-ts-mode
       auctex
     ]; 
@@ -67,7 +92,7 @@ in {
   services.emacs.enable = true; # enable emacs daemon
   services.emacs.defaultEditor = true; 
 
-  # home.packages = LSPs;
+  home.packages = [pkgs.jdt-language-server];
 
   home.file.".config/emacs" = {
     source = ./config;
