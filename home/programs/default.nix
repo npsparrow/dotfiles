@@ -52,6 +52,7 @@ in
     just
     cachix
     webex
+    libreoffice
 
     texlive.combined.scheme-full
 
