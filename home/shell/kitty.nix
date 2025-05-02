@@ -2,8 +2,9 @@
 {
   programs.kitty = {
     enable = true;
-    font.name = "Lilex Nerd Font Mono";
-    theme = "Catppuccin-Mocha";
+    font.name = "Maple Mono NF";
+    font.size = 13;
+    themeFile = "Catppuccin-Mocha";
     shellIntegration = {
       enableZshIntegration = true;
       mode = "no-cursor";

@@ -40,9 +40,14 @@ in
     mappings = {
       "<C-i>" = "recolor";
     };
+    options = {
+      show-recent = 0;
+      selection-clipboard = "clipboard";
+      selection-notification = false;
+    };
   };
 
-  home.packages = with pkgs; [
+  home.packages = [
 
     brave
     vesktop
@@ -53,45 +58,77 @@ in
     cachix
     webex
     libreoffice
+    pkgs.pkgsCross.armv7l-hf-multiplatform.glibc
 
-    texlive.combined.scheme-full
+    pkgs.brave
+    pkgs.vesktop
+    # (pkgs.discord.override {
+    #   # remove any overrides that you don't want
+    #   withOpenASAR = true;
+    #   withVencord = true;
+    # })
+    pkgs.maim 
+    pkgs.xclip
+    pkgs.eza
+    pkgs.just
+    pkgs.cachix
+    pkgs.webex
+    pkgs.zoom-us
+    pkgs.docker-compose
 
-    feh
+    pkgs.p4
+
+    pkgs.jetbrains.idea-community
+    pkgs.jdk8
+
+    # pkgs.ghidra
+    pkgs.ida-free
+
+    pkgs.prismlauncher
+    pkgs.ferium
+    pkgs.desmume
+    pkgs.libfaketime
+
+    # pkgs.lime3ds
+    pkgs.appimage-run
+
+    pkgs.texlive.combined.scheme-full
+
+    pkgs.feh
     dunst_vol
 
-    lunarvim
+    pkgs.lunarvim
 
     # archives
-    zip
-    xz
-    unzip
-    p7zip
+    pkgs.zip
+    pkgs.xz
+    pkgs.unzip
+    pkgs.p7zip
 
     # utils
-    ripgrep # recursively searches directories for a regex pattern
-    jq # A lightweight and flexible command-line JSON processor
-    yq-go # yaml processor https://github.com/mikefarah/yq
-    eza # A modern replacement for ‘ls’
-    fzf # A command-line fuzzy finder
-    tldr
+    pkgs.ripgrep # recursively searches directories for a regex pattern
+    pkgs.jq # A lightweight and flexible command-line JSON processor
+    pkgs.yq-go # yaml processor https://github.com/mikefarah/yq
+    pkgs.eza # A modern replacement for ‘ls’
+    pkgs.fzf # A command-line fuzzy finder
+    pkgs.tldr
 
     # networking tools
-    mtr # A network diagnostic tool
-    iperf3
-    dnsutils  # `dig` + `nslookup`
-    ldns # replacement of `dig`, it provide the command `drill`
-    aria2 # A lightweight multi-protocol & multi-source command-line download utility
-    socat # replacement of openbsd-netcat
-    nmap # A utility for network discovery and security auditing
-    ipcalc  # it is a calculator for the IPv4/v6 addresses
-    tcpdump
+    pkgs.mtr # A network diagnostic tool
+    pkgs.iperf3
+    pkgs.dnsutils  # `dig` + `nslookup`
+    pkgs.ldns # replacement of `dig`, it provide the command `drill`
+    pkgs.aria2 # A lightweight multi-protocol & multi-source command-line download utility
+    pkgs.socat # replacement of openbsd-netcat
+    pkgs.nmap # A utility for network discovery and security auditing
+    pkgs.ipcalc  # it is a calculator for the IPv4/v6 addresses
+    pkgs.tcpdump
 
     # misc
-    file
-    tree
-    acpi
-    zathura
-    glow
+    pkgs.file
+    pkgs.tree
+    pkgs.acpi
+    pkgs.glow
     # gnupg
 
     # nix related
@@ -101,20 +138,20 @@ in
     # nix-output-monitor
 
     # process monitoring
-    btop  # replacement of htop/nmon
-    iotop # io monitoring
-    iftop # network monitoring
+    pkgs.btop  # replacement of htop/nmon
+    pkgs.iotop # io monitoring
+    pkgs.iftop # network monitoring
 
     # system call monitoring
-    strace # system call monitoring
-    ltrace # library call monitoring
-    lsof # list open files
+    pkgs.strace # system call monitoring
+    pkgs.ltrace # library call monitoring
+    pkgs.lsof # list open files
 
     # system tools
-    sysstat
-    lm_sensors # for `sensors` command
-    ethtool
-    pciutils # lspci
-    usbutils # lsusb
+    pkgs.sysstat
+    pkgs.lm_sensors # for `sensors` command
+    pkgs.ethtool
+    pkgs.pciutils # lspci
+    pkgs.usbutils # lsusb
   ];
 }

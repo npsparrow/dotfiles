@@ -27,34 +27,42 @@ in
       systemd-boot.enable = lib.mkDefault true;
       systemd-boot.configurationLimit = 10;
     };
+    kernelParams = [ "preempt=full" ];
   };
 
   
   networking.hostName = "sparrow";
-  age.secrets.wireless.file = ../../secrets/wireless.age;
-  networking.wireless.environmentFile = "${config.age.secrets.wireless.path}";
-  networking.wireless = {
-    enable = true;  			          # Enables wireless support via wpa_supplicant.
-    userControlled.enable = true; 	# Enables support for wpa_cli and wpa_gui
-    networks = {
-      "peregrine".pskRaw = "@PSK_PEREGRINE@";
-      "enkay".pskRaw = "@PSK_HOME@";
-      "rpi_wpa2" = {
-        auth = ''
-          key_mgmt=WPA-EAP
-          eap=PEAP
-          phase2="auth=MSCHAPV2"
-          identity="@RPI_IDENTITY@"
-          password="@RPI_PASSWORD@"
-        '';
-      };
-    };
-  };
+  # age.secrets.wireless.file = ../../secrets/wireless.age;
+  # networking.wireless.secretsFile = "${config.age.secrets.wireless.path}";
+
+  networking.networkmanager.enable = true;
+  # networking.wireless = {
+  #   enable = true;  			          # Enables wireless support via wpa_supplicant.
+  #   userControlled.enable = true; 	# Enables support for wpa_cli and wpa_gui
+  #   networks = {
+  #     "peregrine".pskRaw = "ext:PSK_PEREGRINE";
+  #     "enkay".pskRaw = "ext:PSK_HOME";
+  #     "rpi_wpa2" = {
+  #       auth = ''
+  #         key_mgmt=WPA-EAP
+  #         eap=PEAP
+  #         phase2="auth=MSCHAPV2"
+  #         identity="panicn"
+  #         password=ext:RPI_PASSWORD
+  #       '';
+  #     };
+  #   };
+  # };
 
   # Enable the X11 windowing system.
   hardware.graphics.enable = true;
   hardware.graphics.extraPackages = [ pkgs.mesa.drivers ];
-  # hardware.graphics.driSupport = true;
+  hardware.graphics.enable32Bit = true;
+
+  # enable bluetooh
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
+  services.blueman.enable = true;
 
   # enable autorandr and hotplug
   services.autorandr = {
@@ -167,7 +175,23 @@ in
     enableSSHSupport = true;
   };
 
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+    localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+  };
+
   services.asusd.enable = true;
+
+  services.postgresql = {
+    enable = true;
+    ensureDatabases = [ "mydatabase" ];
+    authentication = pkgs.lib.mkOverride 10 ''
+      #type database  DBuser  auth-method
+      local all       all     trust
+    '';
+  };
 
 
   # For more information, see `man configuration.nix` or

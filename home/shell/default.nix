@@ -43,6 +43,7 @@
     ranger.enable = true;
 
     zoxide.enable = true;
+    zoxide.options = [ "--cmd cd" ];
     
     # ========================
     # ZSH
@@ -63,9 +64,10 @@ if [[ -z "$DISPLAY" ]] && [[ $(tty) = /dev/tty1 ]]; then
 fi
 '';
       shellAliases = {
-        l = "eza --icons -F -H --group-directories-first --git -1 -alF";
-        ls = "eza --icons -F -H --group-directories-first --git -1 -alF";
+        l = "eza --icons -F -H --group-directories-first -1 -alF";
+        ls = "eza --icons -F -H --group-directories-first -1 -alF";
         update = "sudo nixos-rebuild switch";
+        cat = "bat --paging=never";
       };
       history.size = 10000;
       history.path = "${config.xdg.dataHome}/zsh/history";
@@ -97,6 +99,10 @@ fi
     # https://github.com/sharkdp/bat/issues/2115
     MANPAGER="sh -c 'col -bx | bat --theme=default -l man -p'";
     MANROFFOPT="-c";
+
+    P4USER = "panicn";
+    P4CLIENT = "npsparrow";
+    P4PORT = "hass-helix.win.rpi.edu:1666";
   };
 
 }

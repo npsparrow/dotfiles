@@ -35,8 +35,10 @@ bspc config gapless_monocle      true
 bspc config ignore_ewmh_focus true
 
 
+
 # APPLICATION RULES
 bspc rule -a Zathura state=tiled
+bspc rule -a GSAS4550 state=floating
 
 # BAR
 

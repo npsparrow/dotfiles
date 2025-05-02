@@ -13,7 +13,7 @@ deploy: emacs-clean
 
 # deploy with show-trace and verbose
 debug: emacs-clean
-    nixos-rebuild switch --flake . --use-remote-sudo --show-trace --verbose --option eval-cache false
+    nixos-rebuild switch --flake . --use-remote-sudo --show-trace --verbose # --option eval-cache false
 
 # test
 test: emacs-clean

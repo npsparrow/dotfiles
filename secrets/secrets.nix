@@ -6,6 +6,5 @@ let
   systems = [ sparrow ];
 in
 {
-  "wireless.age".publicKeys = users ++ systems;
   "vcvol.age".publicKeys = users ++ systems;
 }

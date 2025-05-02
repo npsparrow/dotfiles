@@ -9,7 +9,7 @@ in {
     isNormalUser = true;
     useDefaultShell = true;
     description = "nikhil";
-    extraGroups = [ "wheel" "docker" "video" ];
+    extraGroups = [ "wheel" "docker" "video" "wireshark" "networkmanager" ];
   };
 
   nix.registry.sparrow.to = {
@@ -72,14 +72,18 @@ in {
 
       # normal fonts
       noto-fonts
-      noto-fonts-cjk
+      noto-fonts-cjk-sans
       noto-fonts-emoji
 
       # polybar default font
       siji
 
       # nerdfonts
-      (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" "Lilex" ]; })
+      maple-mono-NF
+
+      nerd-fonts.fira-code
+      nerd-fonts.droid-sans-mono
+      nerd-fonts.lilex
     ];
 
     # use fonts specified by user rather than default ones
@@ -102,6 +106,8 @@ in {
 
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    (aspellWithDicts
+      (dicts: with dicts; [ de en en-computers en-science es fr la ]))
     vim 
     devenv
     wget
@@ -112,14 +118,27 @@ in {
     xfce.thunar # xfce4's file manager
     nnn # terminal file manager
     sbctl
+    slack
     ntfs3g
     man-pages
     man-pages-posix
+    qemu_full
   ];
+  programs.wireshark.enable = true;
   documentation.dev.enable = true;
 
+  # qemu uefi firmware support
+  systemd.tmpfiles.rules = [ "L+ /var/lib/qemu/firmware - - - - ${pkgs.qemu}/share/qemu/firmware" ];
+
+  # architecture emulation
+  boot.binfmt.emulatedSystems = [
+    "aarch64-linux"
+    "armv6l-linux"
+    "riscv64-linux"
+  ];
+
   # sound.enable = false;               # ALSA; NO LONGER HAS ANY EFFECT
-  hardware.pulseaudio.enable = false; # pulseaudio
+  services.pulseaudio.enable = false; # pulseaudio
 
   services.power-profiles-daemon.enable = true;
 
