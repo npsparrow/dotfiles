@@ -49,16 +49,19 @@ in
 
   home.packages = [
 
-    brave
-    vesktop
-    maim 
-    xclip
-    eza
-    just
-    cachix
-    webex
-    libreoffice
+<<<<<<< Updated upstream
+    pkgs.brave
+    pkgs.vesktop
+    pkgs.maim 
+    pkgs.xclip
+    pkgs.eza
+    pkgs.just
+    pkgs.cachix
+    pkgs.webex
+    pkgs.libreoffice
+=======
     pkgs.pkgsCross.armv7l-hf-multiplatform.glibc
+>>>>>>> Stashed changes
 
     pkgs.brave
     pkgs.vesktop
