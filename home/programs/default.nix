@@ -49,7 +49,6 @@ in
 
   home.packages = [
 
-<<<<<<< Updated upstream
     pkgs.brave
     pkgs.vesktop
     pkgs.maim 
@@ -59,9 +58,7 @@ in
     pkgs.cachix
     pkgs.webex
     pkgs.libreoffice
-=======
     pkgs.pkgsCross.armv7l-hf-multiplatform.glibc
->>>>>>> Stashed changes
 
     pkgs.brave
     pkgs.vesktop
