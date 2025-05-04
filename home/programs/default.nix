@@ -49,6 +49,8 @@ in
 
   home.packages = [
 
+    pkgs.pkgsCross.armv7l-hf-multiplatform.glibc
+
     pkgs.brave
     pkgs.vesktop
     # (pkgs.discord.override {
