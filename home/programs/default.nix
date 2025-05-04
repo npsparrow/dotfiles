@@ -51,17 +51,6 @@ in
 
     pkgs.brave
     pkgs.vesktop
-    pkgs.maim 
-    pkgs.xclip
-    pkgs.eza
-    pkgs.just
-    pkgs.cachix
-    pkgs.webex
-    pkgs.libreoffice
-    pkgs.pkgsCross.armv7l-hf-multiplatform.glibc
-
-    pkgs.brave
-    pkgs.vesktop
     # (pkgs.discord.override {
     #   # remove any overrides that you don't want
     #   withOpenASAR = true;
@@ -75,6 +64,7 @@ in
     pkgs.webex
     pkgs.zoom-us
     pkgs.docker-compose
+    pkgs.libreoffice
 
     pkgs.p4
 
